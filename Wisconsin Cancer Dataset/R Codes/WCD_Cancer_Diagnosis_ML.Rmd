@@ -1,0 +1,239 @@
+---
+title: 'Application of Machine Learning Algorithms to Cancer Diagnosis'
+author: "Steve and Jonathan"
+date: " `r as.Date(Sys.time())` "
+output: 
+  html_document: 
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+---
+
+
+
+
+```{r setup, include=FALSE, cache=F}
+knitr::opts_chunk$set(echo = F, warning = F, message = F, fig.width = 10, fig.height = 10, results = "asis")
+options(width = 10)
+rm(list=ls())
+# Set practice root directory
+basedir <- "C:/Users/sbicko/Google Drive/PHD/Practical Exercises/Wisconsin Cancer Dataset/"
+
+knitr::opts_knit$set(root.dir = normalizePath(basedir))
+```
+
+# Introduction
+
+Machine Learning (ML) is a science which involves the application of Artificial Intelligence (AI) that enables the computers to automatically learn and improve or get things done based on experience without being explicitly programed. This involves computer looking for patterns based on previous observations, experiences or instructions. In this exercise, we apply some of the Machine Learning Algorithms in Diagnosis of Cancer using [Breast Cancer Wisconsin Data Set](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(original)) and also review some of the papers that have been published analyzing the same data set.
+
+
+## Wisconsin Diagnostic Breast Cancer (WDBC)
+
+Various ML algorithms, such as Artificial neural networks (ANNs) and decision trees (DTs) have been used in cancer detection and diagnosis. Using [Breast Cancer (WDBC) data set](https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.names), we'll implement these algorithms in analyzing WDBC data set.
+
+The data set contains $569$ cases with $32$ variables. The diagnosis classification is either (M = Malignant) or (B = Benign). Other variables include cell nucleus:
+
+* Radius
+* Texture
+* Perimeter
+* Smoothness
+* Compactness
+* Concave points
+* Symmetry
+* Fractal dimension
+
+
+
+```{r usefulpackages, echo=T}
+# Useful Packages
+
+pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret")
+if (!"pacman" %in% installed.packages()[,1]){
+  install.packages("pacman")
+}
+pacman::p_load(pkgs, install = T, character.only = T)
+```
+
+
+
+```{r usefulfunctions, echo=T}
+# Functions to be used
+
+factorFunc <- function(x){
+  factor(x)
+}
+
+
+
+# Variables with missing Values
+missPropFunc <- function(dat){
+  dat <- as.data.frame(dat)
+  vars <- apply(dat,2,function(x) round((sum(is.na(x))/length(x))*100, 2))
+  miss_vars <- vars[vars>0]
+  miss_data <- as.data.frame(miss_vars)
+  if (nrow(miss_data)>0){
+    return(miss_data)
+  } else {
+    print("No missing entries")
+  }
+}
+
+```
+
+
+
+We download the data set and description file from the [site](https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data), convert them to \textit{.xlsx} files and then store locally. Illustrated below.
+
+```{r wdbc_df, echo=T}
+df_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data"
+wdbc_df <- fread(df_url, showProgress=F)
+dim(wdbc_df) # Confirm ncols and nrows
+```
+
+
+Getting variable information:
+
+```{r var_info, echo=T}
+desc_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.names"
+desc_file <- readLines(desc_url)
+var_info_pos <- grep(". Attribute information", desc_file, ignore.case = T)+2
+var_info <- desc_file[var_info_pos:(var_info_pos+5+ncol(wdbc_df)/3)]
+var_info <- var_info[!var_info %in% c("", "Ten real-valued features are computed for each cell nucleus:", "3-32)")]
+var_info <- sub('.*\\\t', '', var_info)
+var_info <- sub('.*\\) \\b', '', var_info)
+var_info_df <- data.frame(vars=var_info)
+var_info_df$labels <- as.character(var_info_df$vars)
+var_info_df$vars <- str_wrap(tolower(sub('\\(.*', '', var_info_df$vars)))
+var_info_df$vars <- sub(" ", "_", var_info_df$vars)
+rep_vars <- var_info_df[3:nrow(var_info_df), ]
+var_info_df <- rbind(var_info_df, rep_vars[rep(seq_len(nrow(rep_vars)), 2), ])
+measurements <- rep(c("mean", "se", "worst"), each=10)
+var_info_df$vars[3:nrow(var_info_df)] <- paste(var_info_df$vars[3:nrow(var_info_df)], measurements, sep = '_')
+measurements <- rep(c("Mean", "Standard error", "Worst"), each=10)
+var_info_df$labels[3:nrow(var_info_df)] <- paste(var_info_df$labels[3:nrow(var_info_df)], measurements, sep = ' - ')
+```
+
+
+Add variable names to the data set and save the data set in \textit{.xlsx} together the variable discription
+
+```{r, echo=T}
+colnames(wdbc_df) <- var_info_df$vars
+wdbc_df_info <- list(Description = var_info_df, wdbc_data = wdbc_df)
+openxlsx::write.xlsx(wdbc_df_info, "Datasets/Out/wdbc_dataset.xlsx")
+```
+
+
+
+### Data cleaning and Descriptives
+
+```{r desc, echo=T}
+working_df <- wdbc_df
+str(wdbc_df)
+```
+
+Convert \textbf{diagnosis} to factor and check for missingness.
+
+```{r factor, echo=T}
+working_df$diagnosis <- factorFunc(working_df$diagnosis)
+missPropFunc(working_df)
+```
+
+Summarize numerical variables.
+
+```{r, echo=T}
+
+vars_type <- sapply(working_df, class, simplify = F)
+num_vars <- names(grep("numer", vars_type, value = T))
+summary_tab <- lapply(working_df[, num_vars, with=F], summary)
+summary_df <- Reduce(rbind, summary_tab)
+summary_df <- apply(summary_df,2, function(x){round(x, 3)})
+row.names(summary_df) <- names(summary_tab)
+knitr::kable(summary_df)
+```
+
+
+The overall distribution of diagnosis indicators and distribution accross all features:
+
+```{r, echo=T}
+knitr::kable(working_df %>% 
+  count(diagnosis) %>% 
+  mutate(percentage=round(n/sum(n)*100, 2)))
+```
+
+
+
+```{r, echo=T}
+ind_vars <- names(working_df)[!names(working_df) %in% c("diagnosis", "id_number")]
+form <- as.formula(paste(ind_vars[1], "~", "diagnosis"))
+old.par <- par(mfrow=c(5, 6))
+for (i in 1:length(ind_vars)){
+ boxplot(form, data = working_df, main=paste("Cancer diagnosis by", ind_vars[i]), xlab="Diagnosis", cex.main=0.8, ylab=ind_vars[i], cex=0.8) 
+}
+par(old.par)
+```
+
+
+#### Correlation
+
+The next step invloves checking the correlation between the features. This will help us reduce the number of features based on the strength of association. In addition, training a model on a data set with features which have little or no correlation may lead to inaccurate results. It is therefore important to identify and filter out features which are not correlated.
+
+
+```{r, echo=T}
+features_df <- working_df[, ind_vars, with=F]
+cor_mat <- cor(features_df)
+corrplot(cor_mat, order = "hclust", tl.cex = 1, addrect = 8)
+```
+
+
+## Model Fitting
+
+We first start by creating trainig and testing datasets.
+
+```{r, echo=T}
+set.seed(2000)
+df_index <- createDataPartition(working_df$diagnosis, p=0.7, list = F)
+train_df <- working_df[df_index, -1]
+test_df <- working_df[-df_index, -1]
+```
+
+
+### PCA
+
+Since there are many correlated features, we will use PCA to reduce the dimension of the data.
+
+```{r, echo=T}
+pca_result <- prcomp(working_df[, ind_vars, with=F], center = TRUE, scale = TRUE)
+biplot(pca_result, scale = 0)
+```
+
+
+To access the number of components which would explain much of the variations, we use a scree plot.
+
+```{r, echo=T}
+# Compute the variance of each componet
+pca_var <- (pca_result$sdev)^2
+# Proportion of variance explained
+prop_var_exp <- pca_var/sum(pca_var)
+round(prop_var_exp, 3)*100
+```
+
+The result above shows that the first component explans more than $44\%$ variance. Second component explains $19\%$ variance and so on. The scree plot would help to select the number of componets for modelling.
+
+```{r, echo=T}
+plot(prop_var_exp, xlab = "Principal Component",
+             ylab = "Proportion of Variance Explained",
+             type = "b")
+```
+
+The plot above shows that approximately $10$ componets explains around `r round(sum(prop_var_exp[1:10])*100, 3)`% of the variance while $17$ components explains more than `r round(sum(prop_var_exp[1:17])*100, 3)`% of the variance. The comulative variance plot below shows a clear picture of the components.
+
+
+```{r, echo=T}
+plot(cumsum(prop_var_exp), xlab = "Principal Component",
+             ylab = "Cumulative Proportion of Variance Explained",
+             type = "b")
+```
+
+
+
+The plot above shows that approximately $10$ components explains more than  $$
