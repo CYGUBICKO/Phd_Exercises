@@ -6,6 +6,7 @@ output:
   html_document: 
     number_sections: yes
     toc: yes
+    toc_depth: 4
     toc_float: yes
 ---
 
@@ -47,7 +48,7 @@ The data set contains $569$ cases with $32$ variables. The diagnosis classificat
 ```{r usefulpackages, echo=T}
 # Useful Packages
 
-pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret")
+pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret", "MASS")
 if (!"pacman" %in% installed.packages()[,1]){
   install.packages("pacman")
 }
@@ -119,7 +120,7 @@ Add variable names to the data set and save the data set in \textit{.xlsx} toget
 ```{r, echo=T}
 colnames(wdbc_df) <- var_info_df$vars
 wdbc_df_info <- list(Description = var_info_df, wdbc_data = wdbc_df)
-openxlsx::write.xlsx(wdbc_df_info, "Datasets/Out/wdbc_dataset.xlsx")
+#openxlsx::write.xlsx(wdbc_df_info, "Datasets/Out/wdbc_dataset.xlsx")
 ```
 
 
@@ -187,19 +188,14 @@ corrplot(cor_mat, order = "hclust", tl.cex = 1, addrect = 8)
 
 ## Model Fitting
 
-We first start by creating trainig and testing datasets.
 
-```{r, echo=T}
-set.seed(2000)
-df_index <- createDataPartition(working_df$diagnosis, p=0.7, list = F)
-train_df <- working_df[df_index, -1]
-test_df <- working_df[-df_index, -1]
-```
+### Principal Component Analysis and Linear Discriminant Analysis
+
+Since there are many correlated features, we will use PCA to reduce the dimension of the data. Both LDA and PCA are used to classify and reduce the dimentionality of the data. One of the key difference is that PCA is unsupervised learning while LDA is supervised. 
 
 
-### PCA
+#### PCA
 
-Since there are many correlated features, we will use PCA to reduce the dimension of the data.
 
 ```{r, echo=T}
 pca_result <- prcomp(working_df[, ind_vars, with=F], center = TRUE, scale = TRUE)
@@ -235,5 +231,77 @@ plot(cumsum(prop_var_exp), xlab = "Principal Component",
 ```
 
 
+We can view the distribution of the diagnosis between the two diagnosis outcomes.
+
+```{r}
+pca_df <- pca_result$x %>% data.frame()
+str(pca_df)
+```
 
 
+```{r}
+p <- ggplot(pca_df, aes(x=PC1, y=PC2, col=working_df$diagnosis)) + geom_point(alpha=0.5) +
+  labs(color = "Diagnosis")
+p
+```
+
+
+
+#### LDA
+
+```{r, echo=T}
+lda_result <- lda(diagnosis~., data = working_df, 
+                  center=T, scale = T)
+lda_result$prior
+```
+
+The lda result contains the prior probability of each diagnosis class, counts, class-specific means, singular values (svd) and so on. We can use svd to compute the amount of between-group variance that is explained by each linear discriminant.
+
+```{r, echo=T}
+prop_var <- lda_result$svd^2/sum(lda_result$svd^2)
+prop_var
+```
+
+We see that the first linear discriminant explains more than `r prop_var*100`% of the between-group variance in the data.
+
+
+```{r, echo=T}
+lda_result_df <- predict(lda_result, working_df)
+lda_result_df <- lda_result_df$x %>% as.data.frame()
+lda_result_df <- cbind(lda_result_df, 
+                       diagnosis=working_df[, "diagnosis"])
+p <- ggplot(lda_result_df, aes(x=LD1, fill=diagnosis)) + geom_density(alpha=0.5) + 
+  labs(color = "Diagnosis")
+p
+```
+
+
+
+### Machine Learning Models
+
+This section will apply various ML algorithms using both PCA and LDA methods. We first start by creating trainig and testing datasets.
+
+
+```{r, echo=T}
+set.seed(2000)
+df_index <- createDataPartition(working_df$diagnosis, p=0.7, list = F)
+train_df <- working_df[df_index, -1]
+test_df <- working_df[-df_index, -1]
+```
+
+
+Data \textbf{pre-processing} involves transforming data into a specific format to improve the performance of machine learning algorithms. We'll use \textbf{preProcess} function in package \textit{caret} to transform the data.
+
+Our main focus is transforming our predictors (characteristics) such that we reduce their dimensionality to fewer dimension where the new characterisitcs are uncorrelated. Therefore, we'll apply \textit{pca} method with a threshold of $.99$.
+
+
+```{r, echo=T}
+model_control <- trainControl(method="cv",
+                            number = 5,
+                            preProcOptions = list(thresh = 0.99), # threshold for pca preprocess
+                            classProbs = TRUE,
+                            summaryFunction = twoClassSummary)
+```
+
+
+#### 
