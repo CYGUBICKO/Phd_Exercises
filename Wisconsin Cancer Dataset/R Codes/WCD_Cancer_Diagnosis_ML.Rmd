@@ -298,10 +298,31 @@ Our main focus is transforming our predictors (characteristics) such that we red
 ```{r, echo=T}
 model_control <- trainControl(method="cv",
                             number = 5,
-                            preProcOptions = list(thresh = 0.99), # threshold for pca preprocess
+                            preProcOptions = list(thresh = 0.99),
                             classProbs = TRUE,
                             summaryFunction = twoClassSummary)
 ```
 
 
-#### 
+#### LDA
+
+Define training and testing data sets for LDA models.
+
+
+```{r}
+train_lda_df <- lda_result_df[df_index,]
+test_lda_df <- lda_result_df[-df_index,]
+```
+
+
+```{r}
+lda_model <- train(diagnosis~., data = train_lda_df,  method="lda2",  metric="ROC",
+                   preProc = c("center", "scale"), trControl=model_control)
+lda_model
+```
+
+
+```{r}
+
+```
+
