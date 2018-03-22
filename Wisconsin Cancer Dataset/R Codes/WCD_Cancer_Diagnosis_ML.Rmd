@@ -48,7 +48,8 @@ The data set contains $569$ cases with $32$ variables. The diagnosis classificat
 ```{r usefulpackages, echo=T}
 # Useful Packages
 
-pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret", "MASS")
+pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret", "MASS", "openxlsx",
+          "ROCR", "caTools")
 if (!"pacman" %in% installed.packages()[,1]){
   install.packages("pacman")
 }
@@ -86,41 +87,51 @@ missPropFunc <- function(dat){
 We download the data set and description file from the [site](https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data), convert them to \textit{.xlsx} files and then store locally. Illustrated below.
 
 ```{r wdbc_df, echo=T}
+# Define data url
 df_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data"
-wdbc_df <- fread(df_url, showProgress=F)
-dim(wdbc_df) # Confirm ncols and nrows
-```
-
-
-Getting variable information:
-
-```{r var_info, echo=T}
 desc_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.names"
-desc_file <- readLines(desc_url)
-var_info_pos <- grep(". Attribute information", desc_file, ignore.case = T)+2
-var_info <- desc_file[var_info_pos:(var_info_pos+5+ncol(wdbc_df)/3)]
-var_info <- var_info[!var_info %in% c("", "Ten real-valued features are computed for each cell nucleus:", "3-32)")]
-var_info <- sub('.*\\\t', '', var_info)
-var_info <- sub('.*\\) \\b', '', var_info)
-var_info_df <- data.frame(vars=var_info)
-var_info_df$labels <- as.character(var_info_df$vars)
-var_info_df$vars <- str_wrap(tolower(sub('\\(.*', '', var_info_df$vars)))
-var_info_df$vars <- sub(" ", "_", var_info_df$vars)
-rep_vars <- var_info_df[3:nrow(var_info_df), ]
-var_info_df <- rbind(var_info_df, rep_vars[rep(seq_len(nrow(rep_vars)), 2), ])
-measurements <- rep(c("mean", "se", "worst"), each=10)
-var_info_df$vars[3:nrow(var_info_df)] <- paste(var_info_df$vars[3:nrow(var_info_df)], measurements, sep = '_')
-measurements <- rep(c("Mean", "Standard error", "Worst"), each=10)
-var_info_df$labels[3:nrow(var_info_df)] <- paste(var_info_df$labels[3:nrow(var_info_df)], measurements, sep = ' - ')
-```
+
+# Check if the dataset already exist
+df_path <- paste(basedir, "Datasets/Out/", sep = '')
+pattern <- "wdbc_data"
+if (grepl(pattern, list.files(df_path), ignore.case = T)){
+  df_name <- grep(pattern, list.files(df_path), value = T)
+  print("Reading dataset from your computer... \n")
+  working_df <- read.xlsx(paste("Datasets/Out/", df_name, sep = ''), sheet = 2)
+  cat(df_name, " dataset already saved!!! We'll proceed to modeling.", "\n")
+} else {
+  
+  # Download data
+  cat("Dowloading dataset from ", df_url, "\n")
+  wdbc_df <- fread(df_url, showProgress=F)
+  # Get variable information
+  desc_file <- readLines(desc_url)
+  var_info_pos <- grep(". Attribute information", desc_file, ignore.case = T)+2
+  var_info <- desc_file[var_info_pos:(var_info_pos+5+ncol(wdbc_df)/3)]
+  var_info <- var_info[!var_info %in% c("", "Ten real-valued features are computed for each cell nucleus:", "3-32)")]
+  var_info <- sub('.*\\\t', '', var_info)
+  var_info <- sub('.*\\) \\b', '', var_info)
+  var_info_df <- data.frame(vars=var_info)
+  var_info_df$labels <- as.character(var_info_df$vars)
+  var_info_df$vars <- str_wrap(tolower(sub('\\(.*', '', var_info_df$vars)))
+  var_info_df$vars <- sub(" ", "_", var_info_df$vars)
+  rep_vars <- var_info_df[3:nrow(var_info_df), ]
+  var_info_df <- rbind(var_info_df, rep_vars[rep(seq_len(nrow(rep_vars)), 2), ])
+  measurements <- rep(c("mean", "se", "worst"), each=10)
+  var_info_df$vars[3:nrow(var_info_df)] <- paste(var_info_df$vars[3:nrow(var_info_df)], measurements, sep = '_')
+  measurements <- rep(c("Mean", "Standard error", "Worst"), each=10)
+  var_info_df$labels[3:nrow(var_info_df)] <- paste(var_info_df$labels[3:nrow(var_info_df)], measurements, sep = ' - ')
+  colnames(wdbc_df) <- var_info_df$vars
+  #Add variable names to the data set and save the data set in .xlsx together the variable discription
+  wdbc_df_info <- list(Description = var_info_df, wdbc_data = wdbc_df)
+  #openxlsx::write.xlsx(wdbc_df_info, "Datasets/Out/wdbc_dataset.xlsx") # Uncomment to save the dataset
+  working_df <- wdbc_df
+  cat(pattern, " didn't exist!!! We've downloaded data from the url ", df_url, "\n Dataset dim: ",
+      dim(wdbc_df))
+
+}
 
 
-Add variable names to the data set and save the data set in \textit{.xlsx} together the variable discription
-
-```{r, echo=T}
-colnames(wdbc_df) <- var_info_df$vars
-wdbc_df_info <- list(Description = var_info_df, wdbc_data = wdbc_df)
-#openxlsx::write.xlsx(wdbc_df_info, "Datasets/Out/wdbc_dataset.xlsx")
 ```
 
 
@@ -128,8 +139,7 @@ wdbc_df_info <- list(Description = var_info_df, wdbc_data = wdbc_df)
 ### Data cleaning and Descriptives
 
 ```{r desc, echo=T}
-working_df <- wdbc_df
-str(wdbc_df)
+str(working_df)
 ```
 
 Convert \textbf{diagnosis} to factor and check for missingness.
@@ -145,7 +155,7 @@ Summarize numerical variables.
 
 vars_type <- sapply(working_df, class, simplify = F)
 num_vars <- names(grep("numer", vars_type, value = T))
-summary_tab <- lapply(working_df[, num_vars, with=F], summary)
+summary_tab <- lapply(working_df[, num_vars], summary)
 summary_df <- Reduce(rbind, summary_tab)
 summary_df <- apply(summary_df,2, function(x){round(x, 3)})
 row.names(summary_df) <- names(summary_tab)
@@ -180,7 +190,7 @@ The next step invloves checking the correlation between the features. This will 
 
 
 ```{r, echo=T}
-features_df <- working_df[, ind_vars, with=F]
+features_df <- working_df[, ind_vars]
 cor_mat <- cor(features_df)
 corrplot(cor_mat, order = "hclust", tl.cex = 1, addrect = 8)
 ```
@@ -198,7 +208,7 @@ Since there are many correlated features, we will use PCA to reduce the dimensio
 
 
 ```{r, echo=T}
-pca_result <- prcomp(working_df[, ind_vars, with=F], center = TRUE, scale = TRUE)
+pca_result <- prcomp(working_df[, ind_vars], center = TRUE, scale = TRUE)
 biplot(pca_result, scale = 0)
 ```
 
@@ -309,20 +319,71 @@ model_control <- trainControl(method="cv",
 Define training and testing data sets for LDA models.
 
 
-```{r}
+```{r, echo=T}
 train_lda_df <- lda_result_df[df_index,]
 test_lda_df <- lda_result_df[-df_index,]
 ```
 
 
-```{r}
-lda_model <- train(diagnosis~., data = train_lda_df,  method="lda2",  metric="ROC",
+```{r, echo=T}
+lda_model <- train(diagnosis~., train_lda_df,  method="lda2",  metric="ROC",
                    preProc = c("center", "scale"), trControl=model_control)
-lda_model
 ```
 
 
+
+
+Using \textit{predict} function, we generate the clasiffication and posterior probabilities based on the LDA model.
+
+```{r, echo=T}
+lda_predicted <- predict(lda_model, test_lda_df)
+knitr::kable(as.data.frame(table(lda_predicted)))
+```
+
+We can summarize the performance of the LDA classification  using \textit{Confusion Matrix}.
+
+```{r, echo=T}
+lda_confusion_mat <- confusionMatrix(lda_predicted, test_lda_df$diagnosis, positive = "M")
+knitr::kable(lda_confusion_mat$table)
+```
+
+
+Overall accuracy
+
 ```{r}
+knitr::kable(data.frame(lda_confusion_mat$overall))
+```
+
+
+
+Confusion Matrix statistics
+
+```{r}
+knitr::kable(data.frame(lda_confusion_mat$byClass))
+```
+
+
+
+
+The overall accuracy of our model is `r round(lda_confusion_mat$overall[1], 4)*100`%. In addition, our classifier correctly identified \textit{M} `r round(lda_confusion_mat$byClass[1], 4)*100`% of the time (correctly predicting \textit{M} when indeed we should). Further, the true negatives (our specificity) is `r round(lda_confusion_mat$byClass[2], 4)*100`%.
+
+
+```{r}
+lda_predicted_prob <- predict(lda_model, test_lda_df, type="prob")
+# colAUC(lda_predicted_prob, test_lda_df$diagnosis, plotROC=TRUE)
+```
+
+
+
+```{r}
+  ROCRpred <- prediction(lda_predicted_prob$M, test_lda_df$diagnosis)
+  ROCRperf <- performance(ROCRpred, 'tpr','fpr')
+  auc <- performance(ROCRpred, measure = "auc")
+  auc <- auc@y.values[[1]]
+  plot(ROCRperf, colorize = TRUE, text.adj = c(-0.2,1.7), main="ROC Curve")
+  lines(x=c(0, 1), y=c(0, 1), col="black", lwd=1)
+  legend("bottomright", c(paste("ROC curve (AUC = ", round(auc, 3), ")", sep = ''), "AUC = 0.5"),
+         col=c("red", "black"), lwd=c(1,1))
 
 ```
 
