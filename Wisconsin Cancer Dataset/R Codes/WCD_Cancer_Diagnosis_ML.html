@@ -11,7 +11,7 @@
 
 <meta name="author" content="Steve and Jonathan" />
 
-<meta name="date" content="2018-03-21" />
+<meta name="date" content="2018-03-22" />
 
 <title>Application of Machine Learning Algorithms to Cancer Diagnosis</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Application of Machine Learning Algorithms to Cancer Diagnosis</h1>
 <h4 class="author"><em>Steve and Jonathan</em></h4>
-<h4 class="date"><em>2018-03-21</em></h4>
+<h4 class="date"><em>2018-03-22</em></h4>
 
 </div>
 
@@ -268,18 +268,29 @@ missPropFunc &lt;- function(dat){
   }
 }</code></pre>
 <p>We download the data set and description file from the <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data">site</a>, convert them to  files and then store locally. Illustrated below.</p>
+<pre class="r"><code># Check if Dataset dir exist otherwise R create it.
+if(!exists(&quot;Datasets&quot;)){
+  dir.create(file.path(basedir, &quot;Datasets&quot;))
+  dir.create(file.path(&quot;Datasets&quot;, &quot;Out&quot;))
+  dir.create(file.path(&quot;Datasets&quot;, &quot;In&quot;))
+  cat(&quot;Dataset will be saved in created directory \n&quot;, 
+      paste(basedir, &quot;Dataset/Out&quot;))
+}</code></pre>
+<p>Dataset will be saved in created directory C:/Users/sbicko/Google Drive/PHD/Practical Exercises/Wisconsin Cancer Dataset/ Dataset/Out</p>
 <pre class="r"><code># Define data url
 df_url &lt;- &quot;https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data&quot;
 desc_url &lt;- &quot;https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.names&quot;
 
 # Check if the dataset already exist
+pattern &lt;- &quot;wdbc_data&quot; # How is the dataset named in the computer?
 df_path &lt;- paste(basedir, &quot;Datasets/Out/&quot;, sep = '')
-pattern &lt;- &quot;wdbc_data&quot;
-if (grepl(pattern, list.files(df_path), ignore.case = T)){
+if(length(list.files(df_path)&gt;0)){
+  if (grepl(pattern, list.files(df_path), ignore.case = T)){
   df_name &lt;- grep(pattern, list.files(df_path), value = T)
   print(&quot;Reading dataset from your computer... \n&quot;)
   working_df &lt;- read.xlsx(paste(&quot;Datasets/Out/&quot;, df_name, sep = ''), sheet = 2)
   cat(df_name, &quot; dataset already saved!!! We'll proceed to modeling.&quot;, &quot;\n&quot;)
+  }
 } else {
   
   # Download data
@@ -305,7 +316,7 @@ if (grepl(pattern, list.files(df_path), ignore.case = T)){
   colnames(wdbc_df) &lt;- var_info_df$vars
   #Add variable names to the data set and save the data set in .xlsx together the variable discription
   wdbc_df_info &lt;- list(Description = var_info_df, wdbc_data = wdbc_df)
-  #openxlsx::write.xlsx(wdbc_df_info, &quot;Datasets/Out/wdbc_dataset.xlsx&quot;) # Uncomment to save the dataset
+  openxlsx::write.xlsx(wdbc_df_info, &quot;Datasets/Out/wdbc_dataset.xlsx&quot;) # Uncomment to save the dataset
   working_df &lt;- wdbc_df
   cat(pattern, &quot; didn't exist!!! We've downloaded data from the url &quot;, df_url, &quot;\n Dataset dim: &quot;,
       dim(wdbc_df))
@@ -657,7 +668,7 @@ for (i in 1:length(ind_vars)){
 <pre class="r"><code>par(old.par)</code></pre>
 <div id="correlation" class="section level4">
 <h4><span class="header-section-number">1.1.1.1</span> Correlation</h4>
-<p>The next step invloves checking the correlation between the features. This will help us reduce the number of features based on the strength of association. In addition, training a model on a data set with features which have little or no correlation may lead to inaccurate results. It is therefore important to identify and filter out features which are not correlated.</p>
+<p>The next step invloves checking the correlation between the features. This will help us reduce the number of features based on the strength of association. In addition, training a model on a data set with features which have little or no correlation may lead to inaccurate results. It is therefore important to identify and filter out features which are not correlated to other features, more so if measuring the similar aspects, <a href="http://www.aaai.org/Papers/ICML/2003/ICML03-111.pdf">Yu, Lei and Liu, Huan</a>.</p>
 <pre class="r"><code>features_df &lt;- working_df[, ind_vars]
 cor_mat &lt;- cor(features_df)
 corrplot(cor_mat, order = &quot;hclust&quot;, tl.cex = 1, addrect = 8)</code></pre>

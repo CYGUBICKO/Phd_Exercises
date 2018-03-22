@@ -87,18 +87,30 @@ missPropFunc <- function(dat){
 We download the data set and description file from the [site](https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data), convert them to \textit{.xlsx} files and then store locally. Illustrated below.
 
 ```{r wdbc_df, echo=T}
+# Check if Dataset dir exist otherwise R create it.
+if(!exists("Datasets")){
+  dir.create(file.path(basedir, "Datasets"))
+  dir.create(file.path("Datasets", "Out"))
+  dir.create(file.path("Datasets", "In"))
+  cat("Dataset will be saved in created directory \n", 
+      paste(basedir, "Dataset/Out"))
+}
+
+
 # Define data url
 df_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data"
 desc_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.names"
 
 # Check if the dataset already exist
+pattern <- "wdbc_data" # How is the dataset named in the computer?
 df_path <- paste(basedir, "Datasets/Out/", sep = '')
-pattern <- "wdbc_data"
-if (grepl(pattern, list.files(df_path), ignore.case = T)){
+if(length(list.files(df_path)>0)){
+  if (grepl(pattern, list.files(df_path), ignore.case = T)){
   df_name <- grep(pattern, list.files(df_path), value = T)
   print("Reading dataset from your computer... \n")
   working_df <- read.xlsx(paste("Datasets/Out/", df_name, sep = ''), sheet = 2)
   cat(df_name, " dataset already saved!!! We'll proceed to modeling.", "\n")
+  }
 } else {
   
   # Download data
@@ -124,7 +136,7 @@ if (grepl(pattern, list.files(df_path), ignore.case = T)){
   colnames(wdbc_df) <- var_info_df$vars
   #Add variable names to the data set and save the data set in .xlsx together the variable discription
   wdbc_df_info <- list(Description = var_info_df, wdbc_data = wdbc_df)
-  #openxlsx::write.xlsx(wdbc_df_info, "Datasets/Out/wdbc_dataset.xlsx") # Uncomment to save the dataset
+  openxlsx::write.xlsx(wdbc_df_info, "Datasets/Out/wdbc_dataset.xlsx") # Uncomment to save the dataset
   working_df <- wdbc_df
   cat(pattern, " didn't exist!!! We've downloaded data from the url ", df_url, "\n Dataset dim: ",
       dim(wdbc_df))
@@ -186,7 +198,7 @@ par(old.par)
 
 #### Correlation
 
-The next step invloves checking the correlation between the features. This will help us reduce the number of features based on the strength of association. In addition, training a model on a data set with features which have little or no correlation may lead to inaccurate results. It is therefore important to identify and filter out features which are not correlated.
+The next step invloves checking the correlation between the features. This will help us reduce the number of features based on the strength of association. In addition, training a model on a data set with features which have little or no correlation may lead to inaccurate results. It is therefore important to identify and filter out features which are not correlated to other features, more so if measuring the similar aspects, [Yu, Lei and Liu, Huan](http://www.aaai.org/Papers/ICML/2003/ICML03-111.pdf).
 
 
 ```{r, echo=T}
