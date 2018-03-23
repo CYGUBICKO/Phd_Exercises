@@ -1,0 +1,12 @@
+2018 March 23 (Fri)
+=================
+
+* Discussed correlation output:
+	- Look for literature on problem of dimentionality in ML
+* Steve to relook into the AUC of LDA model
+* Steve to look for some cutting edge questions in ML and cancer by reviewing some literature
+ - Possibly pick Kourou and say something about the paper
+* Steve to consider image processing as one of the option in Cancer research
+ - Jonathan will contact a friend who has done some work on image processing
+* Steve to decide whether he can spend some time writing reviews of some papers on cancer
+* If possible, Steve to send email to Jonathan on the progress every monday before next meeting.
