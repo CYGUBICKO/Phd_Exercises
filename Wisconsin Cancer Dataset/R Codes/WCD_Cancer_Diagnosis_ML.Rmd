@@ -49,7 +49,7 @@ The data set contains $569$ cases with $32$ variables. The diagnosis classificat
 # Useful Packages
 
 pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret", "MASS", "openxlsx",
-          "ROCR", "caTools")
+          "ROCR", "caTools", "e1071")
 if (!"pacman" %in% installed.packages()[,1]){
   install.packages("pacman")
 }
@@ -104,7 +104,7 @@ desc_url <- "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-ca
 # Check if the dataset already exist
 pattern <- "wdbc_data" # How is the dataset named in the computer?
 df_path <- paste(basedir, "Datasets/Out/", sep = '')
-if(length(list.files(df_path)>0)){
+if(length(list.files(df_path))>0){
   if (grepl(pattern, list.files(df_path), ignore.case = T)){
   df_name <- grep(pattern, list.files(df_path), value = T)
   print("Reading dataset from your computer... \n")
@@ -164,7 +164,6 @@ missPropFunc(working_df)
 Summarize numerical variables.
 
 ```{r, echo=T}
-
 vars_type <- sapply(working_df, class, simplify = F)
 num_vars <- names(grep("numer", vars_type, value = T))
 summary_tab <- lapply(working_df[, num_vars], summary)
@@ -284,7 +283,7 @@ prop_var <- lda_result$svd^2/sum(lda_result$svd^2)
 prop_var
 ```
 
-We see that the first linear discriminant explains more than `r prop_var*100`% of the between-group variance in the data.
+We see that the first linear discriminant explains a `r prop_var*100`% of the between-group variance in the data.
 
 
 ```{r, echo=T}
@@ -305,7 +304,7 @@ This section will apply various ML algorithms using both PCA and LDA methods. We
 
 
 ```{r, echo=T}
-set.seed(2000)
+set.seed(1000)
 df_index <- createDataPartition(working_df$diagnosis, p=0.7, list = F)
 train_df <- working_df[df_index, -1]
 test_df <- working_df[-df_index, -1]
@@ -339,7 +338,9 @@ test_lda_df <- lda_result_df[-df_index,]
 
 ```{r, echo=T}
 lda_model <- train(diagnosis~., train_lda_df,  method="lda2",  metric="ROC",
-                   preProc = c("center", "scale"), trControl=model_control)
+                   preProc = c("center", "scale"),
+                   tuneLength = 10,
+                   trControl=model_control)
 ```
 
 
@@ -380,22 +381,173 @@ knitr::kable(data.frame(lda_confusion_mat$byClass))
 The overall accuracy of our model is `r round(lda_confusion_mat$overall[1], 4)*100`%. In addition, our classifier correctly identified \textit{M} `r round(lda_confusion_mat$byClass[1], 4)*100`% of the time (correctly predicting \textit{M} when indeed we should). Further, the true negatives (our specificity) is `r round(lda_confusion_mat$byClass[2], 4)*100`%.
 
 
-```{r}
+```{r, echo=T}
 lda_predicted_prob <- predict(lda_model, test_lda_df, type="prob")
-# colAUC(lda_predicted_prob, test_lda_df$diagnosis, plotROC=TRUE)
+colAUC(lda_predicted_prob, test_lda_df$diagnosis, plotROC=TRUE)
 ```
 
 
+
+<!-- ```{r} -->
+<!--   ROCRpred <- prediction(lda_predicted_prob$M, test_lda_df$diagnosis) -->
+<!--   ROCRperf <- performance(ROCRpred, 'tpr','fpr') -->
+<!--   auc <- performance(ROCRpred, measure = "auc") -->
+<!--   auc <- auc@y.values[[1]] -->
+<!--   plot(ROCRperf, col="red", text.adj = c(-0.2,1.7), main="ROC Curve") -->
+<!--   lines(x=c(0, 1), y=c(0, 1), col="black", lwd=1) -->
+<!--   legend("bottomright", c(paste("ROC curve (AUC = ", round(auc, 3), ")", sep = ''), "AUC = 0.5"), -->
+<!--          col=c("red", "black"), lwd=c(1,1)) -->
+
+<!-- ``` -->
+
+
+#### Neural Networks
+
+Our second ML algorithm applied to the data is Neural Networks
+
+```{r, echo=T}
+nn_model <- train(diagnosis~.,
+                    train_df,
+                    method="nnet",
+                    metric="ROC",
+                    preProcess=c('center', 'scale'),
+                    trace=FALSE,
+                    tuneLength=10,
+                    trControl=model_control)
+```
+
+
+Predicted values for Neural Network model.
 
 ```{r}
-  ROCRpred <- prediction(lda_predicted_prob$M, test_lda_df$diagnosis)
-  ROCRperf <- performance(ROCRpred, 'tpr','fpr')
-  auc <- performance(ROCRpred, measure = "auc")
-  auc <- auc@y.values[[1]]
-  plot(ROCRperf, colorize = TRUE, text.adj = c(-0.2,1.7), main="ROC Curve")
-  lines(x=c(0, 1), y=c(0, 1), col="black", lwd=1)
-  legend("bottomright", c(paste("ROC curve (AUC = ", round(auc, 3), ")", sep = ''), "AUC = 0.5"),
-         col=c("red", "black"), lwd=c(1,1))
-
+nn_predicted <- predict(nn_model, test_df)
+knitr::kable(as.data.frame(table(nn_predicted)))
 ```
+
+
+Summary based on \textit{Confusion Matrix}.
+
+```{r, echo=T}
+nn_confusion_mat <- confusionMatrix(nn_predicted, test_df$diagnosis, positive = "M")
+knitr::kable(nn_confusion_mat$table)
+```
+
+
+Overall accuracy
+
+```{r}
+knitr::kable(data.frame(nn_confusion_mat$overall))
+```
+
+
+
+Confusion Matrix statistics
+
+```{r}
+knitr::kable(data.frame(nn_confusion_mat$byClass))
+```
+
+
+
+
+The overall accuracy of our model is `r round(nn_confusion_mat$overall[1], 4)*100`%. In addition, our classifier correctly identified \textit{M} `r round(nn_confusion_mat$byClass[1], 4)*100`% of the time (correctly predicting \textit{M} when indeed we should). Further, the true negatives (our specificity) is `r round(nn_confusion_mat$byClass[2], 4)*100`%.
+
+
+```{r, echo=T}
+nn_predicted_prob <- predict(nn_model, test_df, type="prob")
+colAUC(nn_predicted_prob, test_df$diagnosis, plotROC=TRUE)
+```
+
+
+
+#### KNN
+
+We also fit K-nearest neighbors model
+
+```{r, echo=T}
+knn_model <- train(diagnosis~.,
+                   train_df,
+                   method="knn",
+                   metric="ROC",
+                   preProcess = c('center', 'scale'),
+                   tuneLength=10,
+                   trControl=model_control)
+```
+
+
+Predicted values for Neural Network model.
+
+```{r}
+knn_predicted <- predict(knn_model, test_df)
+knitr::kable(as.data.frame(table(knn_predicted)))
+```
+
+
+Summary based on \textit{Confusion Matrix}.
+
+```{r, echo=T}
+knn_confusion_mat <- confusionMatrix(knn_predicted, test_df$diagnosis, positive = "M")
+knitr::kable(knn_confusion_mat$table)
+```
+
+
+Overall accuracy
+
+```{r}
+knitr::kable(data.frame(knn_confusion_mat$overall))
+```
+
+
+
+Confusion Matrix statistics
+
+```{r}
+knitr::kable(data.frame(knn_confusion_mat$byClass))
+```
+
+
+
+
+The overall accuracy of our model is `r round(knn_confusion_mat$overall[1], 4)*100`%. In addition, our classifier correctly identified \textit{M} `r round(knn_confusion_mat$byClass[1], 4)*100`% of the time (correctly predicting \textit{M} when indeed we should). Further, the true negatives (our specificity) is `r round(knn_confusion_mat$byClass[2], 4)*100`%.
+
+
+```{r, echo=T}
+knn_predicted_prob <- predict(knn_model, test_df, type="prob")
+colAUC(knn_predicted_prob, test_df$diagnosis, plotROC=TRUE)
+```
+
+
+
+### Model Comparisons
+
+We start by comparing the model outputs.
+
+```{r, echo=T}
+models_conf_mat <- list(LDA=lda_confusion_mat, NN=nn_confusion_mat, KNN=knn_confusion_mat)
+all_model_results <- sapply(models_conf_mat, function(x) x$byClass)
+knitr::kable(data.frame(all_model_results))
+```
+
+
+
+
+```{r, echo=T}
+models <- list(LDA=lda_model, NN=nn_model, KNN=knn_model)
+models_resamples <- resamples(models)
+```
+
+Plot the correlation matrix between the models and compare their ROC.
+
+```{r, echo=T}
+models_correlation <- modelCor(models_resamples)
+corrplot(models_correlation)
+```
+
+
+Comparison based on ROC.
+
+```{r, error=T}
+bwplot(models_resamples, metric="ROC")
+```
+
 
