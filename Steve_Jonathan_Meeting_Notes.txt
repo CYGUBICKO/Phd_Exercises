@@ -10,3 +10,36 @@
  - Jonathan will contact a friend who has done some work on image processing
 * Steve to decide whether he can spend some time writing reviews of some papers on cancer
 * If possible, Steve to send email to Jonathan on the progress every monday before next meeting.
+
+2018 Jun 22 (Fri)
+=================
+
+We think about an _analysis_ step and a _threshold_ step, and we
+should separate these conceptually. Some of the metrics (sensitivity,
+specificity) evaluate _after_ the threshold step, and some evaluate
+before (AUC). The former are more general.
+
+Some metrics don't even make sense by themselves (for example, we
+should never report sensitivity without specificity (or vice versa))
+
+The report in general has too much information. This is possibly
+because we don't understand yet which pieces are more important. So we
+should understand better, and present less information but more
+clearly.
+
+Details:
+* what is meant by 100% of the between-group variance?
+* what is the cool correlation matrix picture actually showing?
+* can we identify a small number of "good" metrics that are not
+sensitive to threshold?
+* AUC; matching sensitivity with specificity (what is that one
+called?); suggest one or two others?
+* maybe show boxplot with sens/spec statistic
+* clear explanation of boxplot
+
+Resampling methods are good; make sure we can explain these concisely
+
+Future:
+* Dashboard style presentation to make it clearer for others
+
+JD: investigate about a relocation advance
