@@ -17,8 +17,19 @@ output:
 knitr::opts_chunk$set(echo = F, warning = F, message = F, fig.width = 10, fig.height = 10, results = "asis")
 options(width = 10)
 rm(list=ls())
+# Set desktop dir
+deskdir <- file.path("~/Desktop")
+setwd(deskdir)
+
+# Check if PhD and other dir exist otherwise R creates it.
+if(!exists("PhD")){
+  dir.create(file.path(deskdir, "PhD"))
+  dir.create(file.path("PhD", "Exercises"))
+  dir.create(file.path("Exercises", "JD_Exercise1"))
+}
+
 # Set practice root directory
-basedir <- "C:/Users/sbicko/Google Drive/PHD/Practical Exercises/Wisconsin Cancer Dataset/"
+basedir <- file.path("~/Desktop/PhD/Exercises/JD_Exercise1/Wisconsin Cancer Dataset/")
 
 knitr::opts_knit$set(root.dir = normalizePath(basedir))
 ```
@@ -49,9 +60,9 @@ The data set contains $569$ cases with $32$ variables. The diagnosis classificat
 # Useful Packages
 
 pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret", "MASS", "openxlsx",
-          "ROCR", "caTools", "e1071")
+          "ROCR", "caTools", "e1071", "ranger", "nnet")
 if (!"pacman" %in% installed.packages()[,1]){
-  install.packages("pacman")
+  install.packages("pacman", dependencies = T)
 }
 pacman::p_load(pkgs, install = T, character.only = T)
 ```
