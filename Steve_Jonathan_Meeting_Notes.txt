@@ -43,3 +43,5 @@ Future:
 * Dashboard style presentation to make it clearer for others
 
 JD: investigate about a relocation advance
+
+Already in canada
