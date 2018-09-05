@@ -34,6 +34,7 @@ basedir <- file.path("~/Desktop/PhD/Exercises/JD_Exercise1/Wisconsin Cancer Data
 knitr::opts_knit$set(root.dir = normalizePath(basedir))
 ```
 
+
 # Introduction
 
 Machine Learning (ML) is a science which involves the application of Artificial Intelligence (AI) that enables the computers to automatically learn and improve or get things done based on experience without being explicitly programed. This involves computer looking for patterns based on previous observations, experiences or instructions. In this exercise, we apply some of the Machine Learning Algorithms in Diagnosis of Cancer using [Breast Cancer Wisconsin Data Set](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(original)) and also review some of the papers that have been published analyzing the same data set.
@@ -62,7 +63,7 @@ The data set contains $569$ cases with $32$ variables. The diagnosis classificat
 pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret", "MASS", "openxlsx",
           "ROCR", "caTools", "e1071", "ranger", "nnet")
 if (!"pacman" %in% installed.packages()[,1]){
-  install.packages("pacman", dependencies = T)
+  install.packages("pacman")
 }
 pacman::p_load(pkgs, install = T, character.only = T)
 ```
@@ -175,6 +176,7 @@ missPropFunc(working_df)
 Summarize numerical variables.
 
 ```{r, echo=T}
+working_df <- working_df %>% tbl_df()
 vars_type <- sapply(working_df, class, simplify = F)
 num_vars <- names(grep("numer", vars_type, value = T))
 summary_tab <- lapply(working_df[, num_vars], summary)
@@ -825,7 +827,7 @@ par(old.par)
 ```
 
 
-We further plot the correlation matrix between the models and compare their ROC.
+We apply resample method to comapre the models. Resampling is a method of comparing the performance of various competing machine learning algorithms. It estimates point estimate of the performances (based on a number of samples) which are then compared to obtain the best performing model \textit{(See .pdf file)}.
 
 
 ```{r, echo=T}
@@ -835,16 +837,33 @@ models <- list(LDA=lda_model, NN=nn_model, KNN=knn_model,
                         NN_PCA=nn_pca_model, NB_LDA=nb_lda_model, 
                         NN_LDA=nn_lda_model)
 models_resamples <- resamples(models)
+#summary(models_resamples)
+```
+
+
+Let's plot the resamples summary output.
+
+```{r}
+# Draw box plots to compare models
+scales <- list(x=list(relation="free"), y=list(relation="free"))
+bwplot(models_resamples, scales=scales)
+```
+
+
+
+We further plot the correlation matrix between the models.
+
+```{r}
 models_correlation <- modelCor(models_resamples)
 corrplot(models_correlation)
 ```
 
 
-We further provide visual representation of ROC. We observe high variability in some models, specifically, NB and RF_PCA. On the other hand, NN_LDA and LDA provide high AUC but with some variability.
+<!-- We further provide visual representation of ROC. We observe high variability in some models, specifically, NB and RF_PCA. On the other hand, NN_LDA and LDA provide high AUC but with some variability. -->
 
-```{r, error=T}
-bwplot(models_resamples, metric="ROC")
-```
+<!-- ```{r, error=T} -->
+<!-- bwplot(models_resamples, metric="ROC") -->
+<!-- ``` -->
 
 
 
