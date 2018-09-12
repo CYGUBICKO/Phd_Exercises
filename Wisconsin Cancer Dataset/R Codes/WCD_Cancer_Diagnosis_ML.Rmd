@@ -556,7 +556,7 @@ Summary based on $\textit{Confusion Matrix}$.
 
 ```{r, echo=T}
 naive_bayes_confusion_mat <- confusionMatrix(naive_bayes_predicted, test_df$diagnosis, positive = "M")
-knitr::kable(rand_forest_confusion_mat$table)
+knitr::kable(naive_bayes_confusion_mat$table)
 ```
 
 
@@ -855,7 +855,7 @@ We further plot the correlation matrix between the models.
 
 ```{r}
 models_correlation <- modelCor(models_resamples)
-corrplot(models_correlation)
+corrplot(models_correlation, method="number")
 ```
 
 
