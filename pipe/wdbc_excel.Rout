@@ -1,0 +1,12 @@
+> 
+> # Generated using wrapR file wdbc_excel.wrapR.r
+> source('wdbc_excel.R', echo=TRUE)
+
+> library(openxlsx)
+
+> xlstarget <- paste0(rtargetname, ".xlsx")
+
+> write.xlsx(list(Description = var_table, wdbc_data = wdbc), 
++     xlstarget)
+> # Wrapped output file wdbc_excel.wrapR.rout
+> 
