@@ -25,9 +25,12 @@ $(ms): ../makestuff
 
 ######################################################################
 
+all: lda.Rout qda.Rout
+
 ## People who want to let us install packages for them can run this script
-## May require sudo for some people
+## May require sudo fogtr some people
 packages.Rout: packages.R
+	${run-R}
 
 ######################################################################
 
@@ -60,6 +63,12 @@ clean.Rout: wdbc.Rout clean.R
 pca.Rout: clean.Rout pca.R
 
 lda.Rout: clean.Rout lda.R
+
+qda.Rout: clean.Rout qda.R
+
+## Compare models
+
+compare_models.Rout: lda.Rout qda.Rout compare_models.R
 
 ######################################################################
 
