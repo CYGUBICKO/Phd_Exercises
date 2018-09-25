@@ -5,3 +5,13 @@ target.mk
 make.log
 .gitignore 
 
+*.Rdata
+*.Rlog
+*.Rout
+*.pdf
+*.wrap
+*.excel
+*.wrapR
+
+
+
