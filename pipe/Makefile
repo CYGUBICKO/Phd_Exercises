@@ -91,7 +91,7 @@ evaluate_model.Rout: lda_model.Rout qda_model.Rout knn_model.Rout nn_model.Rout 
 ######################################################################
 
 clean: 
-	rm .*.RData .*.Rout.* .*.wrapR.* .*.Rlog
+	rm .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
 
 ### Makestuff
 
