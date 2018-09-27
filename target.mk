@@ -1,3 +1,3 @@
-target = Makefile
+target = $ 
 target gptarget pushtarget pngtarget pdftarget vtarget acrtarget: $(target)
 
