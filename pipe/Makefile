@@ -30,7 +30,7 @@ all: lda.Rout qda.Rout
 ## People who want to let us install packages for them can run this script
 ## May require sudo fogtr some people
 packages.Rout: packages.R
-	${run-R}
+
 
 ######################################################################
 
@@ -70,8 +70,28 @@ qda.Rout: clean.Rout qda.R
 
 compare_models.Rout: lda.Rout qda.Rout compare_models.R
 
+## Machine learning models using caret package
+
+data_partition.Rout: clean.Rout data_partition.R
+
+training_control.Rout: training_control.R
+
+lda_model.Rout: data_partition.Rout training_control.Rout lda_model.R
+
+qda_model.Rout: data_partition.Rout training_control.Rout qda_model.R
+
+nn_model.Rout: data_partition.Rout training_control.Rout nn_model.R
+
+knn_model.Rout: data_partition.Rout training_control.Rout knn_model.R
+
+## Evaluate ml models and compare the AUC estimates
+
+evaluate_model.Rout: lda_model.Rout qda_model.Rout knn_model.Rout nn_model.Rout evaluate_model.R
+
 ######################################################################
 
+clean: 
+	rm .*.RData .*.Rout.* .*.wrapR.* .*.Rlog
 
 ### Makestuff
 
