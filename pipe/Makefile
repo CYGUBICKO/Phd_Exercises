@@ -38,7 +38,8 @@ packages.Rout: packages.R
 # for cannibalizing
 Sources += tmp.R
 
-Ignore += wdbc.data wdbc.names
+## del wdbc.data wdbc.names ##
+Sources += wdbc.data wdbc.names
 wdbc.data wdbc.names:
 	wget -O $@ "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/$@"
 
