@@ -26,4 +26,4 @@ measurements <- rep(c("Mean", "Standard error", "Worst"), each=10)
 var_table$labels[3:nrow(var_table)] <- paste(var_table$labels[3:nrow(var_table)], measurements, sep = ' - ')
 colnames(wdbc) <- var_table$vars
 
-# rdsave(var_table, wdbc)
+#rdsave(var_table, wdbc)
