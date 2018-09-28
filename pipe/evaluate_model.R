@@ -12,10 +12,10 @@ n_repeats <- 10 # Number of times to reselect the training and test data
 adds <- sample(1:1000, n_repeats)
 seeds <- seq(10, 10000, length.out = n_repeats) + adds
 
-metrics_df <- data.frame(LDA_AUC = rep(NA, n_repeats),
-                         QDA_AUC = rep(NA, n_repeats),
-                         KNN_AUC = rep(NA, n_repeats),
-                         NN_AUC = rep(NA, n_repeats)
+metrics_df <- data.frame(LDA_AUC = rep(NA, n_repeats)
+	, QDA_AUC = rep(NA, n_repeats)
+	, KNN_AUC = rep(NA, n_repeats)
+	# , NN_AUC = rep(NA, n_repeats)
 )
 
 for (i in 1:length(seeds)){
@@ -50,15 +50,15 @@ for (i in 1:length(seeds)){
   knn_auc <- performance(knn_predicted_prob, "auc")
   metrics_df$KNN_AUC[i] <- unlist(knn_auc@y.values)
   
-  # NN
-  nn_fit <- nnModel(seed, part_ratio)
-  nn_predict <- nn_fit$nn_predicted_prob
-  wdbc_test <- nn_fit$wdbc_test
-  nn_predicted_prob <- prediction(nn_predict[,2],
-                                  wdbc_test$diagnosis
-  )
-  nn_auc <- performance(nn_predicted_prob, "auc")
-  metrics_df$NN_AUC[i] <- unlist(nn_auc@y.values)
+	#   # NN ## What is this doing???
+	#   nn_fit <- nnModel(seed, part_ratio)
+	#   nn_predict <- nn_fit$nn_predicted_prob
+	#   wdbc_test <- nn_fit$wdbc_test
+	#   nn_predicted_prob <- prediction(nn_predict[,2],
+	# 		wdbc_test$diagnosis
+	#   )
+	#   nn_auc <- performance(nn_predicted_prob, "auc")
+	#   metrics_df$NN_AUC[i] <- unlist(nn_auc@y.values)
   
 }
 
@@ -69,7 +69,5 @@ metrics_df
 corr <- cor(metrics_df, method = "spearman")
 corr
 
-png("model_metrics_corr.png")
 corrplot(corr, method = "number", bg=1)
-dev.off()
 

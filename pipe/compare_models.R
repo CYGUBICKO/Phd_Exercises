@@ -32,4 +32,4 @@ plot(lda_pred_per, main = "ROC"
 	, ylim = c(0.9, 1)
 )
 plot(qda_pred_per, main = "ROC", col = 4, add = TRUE)
-legend(0.6, 0.6, c("LDA", "QDA"), c(2, 4))
+legend("bottomright", legend=c("LDA", "QDA"), fill=c(2, 4))

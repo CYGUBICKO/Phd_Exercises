@@ -30,7 +30,6 @@ all: lda.Rout qda.Rout
 ## May require sudo fogtr some people
 packages.Rout: packages.R
 
-
 ######################################################################
 
 ## Data
@@ -66,14 +65,18 @@ lda.Rout: clean.Rout lda.R
 
 qda.Rout: clean.Rout qda.R
 
-## Compare models
+## Compare lda to qda; lda is better!
 
 compare_models.Rout: lda.Rout qda.Rout compare_models.R
 
-## Machine learning models using caret package
+######################################################################
 
+## Caret package
+
+## Define a partition function
 data_partition.Rout: clean.Rout data_partition.R
 
+## Define the model_control function
 training_control.Rout: training_control.R
 
 lda_model.Rout: data_partition.Rout training_control.Rout lda_model.R
@@ -83,6 +86,8 @@ qda_model.Rout: data_partition.Rout training_control.Rout qda_model.R
 nn_model.Rout: data_partition.Rout training_control.Rout nn_model.R
 
 knn_model.Rout: data_partition.Rout training_control.Rout knn_model.R
+
+### logistic_model.Rout
 
 ## Evaluate ml models and compare the AUC estimates
 
