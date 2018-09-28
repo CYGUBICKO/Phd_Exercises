@@ -9,8 +9,7 @@ current: target
 
 # stuff
 
-Sources += Makefile .ignore 
-Ignore += .gitignore
+Sources += Makefile .ignore .gitignore
 
 ms = makestuff
 -include $(ms)/os.mk
