@@ -83,15 +83,15 @@ lda_model.Rout: data_partition.Rout training_control.Rout lda_model.R
 
 qda_model.Rout: data_partition.Rout training_control.Rout qda_model.R
 
-nn_model.Rout: data_partition.Rout training_control.Rout nn_model.R
-
 knn_model.Rout: data_partition.Rout training_control.Rout knn_model.R
 
-### logistic_model.Rout
+logistic_model.Rout: data_partition.Rout training_control.Rout logistic_model.R
 
-## Evaluate ml models and compare the AUC estimates
+nn_model.Rout: data_partition.Rout training_control.Rout nn_model.R
 
-evaluate_model.Rout: lda_model.Rout qda_model.Rout knn_model.Rout nn_model.Rout evaluate_model.R
+## Compare the AUC estimates
+
+compare_auc.Rout: lda_model.Rout qda_model.Rout knn_model.Rout logistic_model.Rout nn_model.Rout compare_auc.R
 
 ######################################################################
 
@@ -104,4 +104,5 @@ clean:
 -include $(ms)/visual.mk
 
 -include $(ms)/wrapR.mk
-
+-include $(ms)/pandoc.mk
+-include $(ms)/flextex.mk
