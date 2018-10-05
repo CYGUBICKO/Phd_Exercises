@@ -21,7 +21,7 @@ auc_df <- as.data.frame(auc_list)
 new_var_names <- gsub("*_auc\\w+", "", names(auc_df))
 names(auc_df) <- new_var_names
 corr <- cor(auc_df, method = "spearman")
-corrplot(corr, method="number", bg = "gray88", main = "Correlation between estimated AUCs for different dataset partitions")
+corrplot(corr, method="number", bg = "gray88")
 # Create the partition set variable
 auc_df <- auc_df %>% 
 	mutate(partition_set = paste("set", 1:n())) %>%
@@ -38,7 +38,7 @@ ggplot(data=auc_df, aes(x=partition_set, y=auc_value, group=model, colour=model)
 prop_malignant_df <- as.data.frame(prop_malignant_list)
 names(prop_malignant_df) <- new_var_names
 corr <- cor(prop_malignant_df, method = "spearman")
-corrplot(corr, method="number", bg = "gray88", main = "Correlation between proportions of predicted Malignant instances")
+corrplot(corr, method="number", bg = "gray88")
 # Create the partition set variable
 prop_malignant_df <- prop_malignant_df %>% 
 	mutate(partition_set = paste("set", 1:n())) %>%

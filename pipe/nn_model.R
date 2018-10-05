@@ -48,6 +48,4 @@ for (i in 1:length(seeds)){
 		select(prop)
 		nn_prop_malignant_results <- c(nn_prop_malignant_results, nn_prop_malignant$prop)
 }
-nn_prop_malignant_results 
-
 
