@@ -11,6 +11,17 @@ target.mk
 make.log
 
 ## content from makestuff
+local.mk
+makestuff
+commit.time
+commit.default
+dotdir/
+clonedir/
+up.time
+all.time
+.clean_dir
+*.oldfile
+*.olddiff
 *.xlsx
 commit.time
 commit.default
