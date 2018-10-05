@@ -91,7 +91,7 @@ nn_model.Rout: data_partition.Rout training_control.Rout nn_model.R
 
 ## Compare the AUC estimates
 
-compare_auc.Rout: lda_model.Rout qda_model.Rout knn_model.Rout logistic_model.Rout nn_model.Rout compare_auc.R
+compare_auc.Rout: nn_model.Rout lda_model.Rout qda_model.Rout knn_model.Rout logistic_model.Rout compare_auc.R
 
 ######################################################################
 
