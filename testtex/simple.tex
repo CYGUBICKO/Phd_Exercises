@@ -1,0 +1,39 @@
+\documentclass[12pt]{article}
+
+%% Can't use unicode β, why not?
+%% \usepackage[LGR,T1]{fontenc}
+%% \usepackage[utf8x]{inputenc}
+
+\newcommand{\eref}[1]{(\ref{eq:#1})}
+\newcommand{\fref}[1]{Fig.~\ref{fig:#1}}
+\newcommand{\Fref}[1]{Fig.~\ref{fig:#1}}
+\newcommand{\sref}[1]{Sec.~\ref{#1}}
+\newcommand{\frange}[2]{Fig.~\ref{fig:#1}--\ref{fig:#2}}
+\newcommand{\tref}[1]{Table~\ref{tab:#1}}
+\newcommand{\tlab}[1]{\label{tab:#1}}
+
+\newcommand{\comment}[3]{\textcolor{#1}{\textbf{[#2: }\textsl{#3}\textbf{]}}}
+\newcommand{\jd}[1]{\comment{cyan}{JD}{#1}}
+\newcommand{\swp}[1]{\comment{magenta}{SWP}{#1}}
+\newcommand{\dc}[1]{\comment{blue}{DC}{#1}}
+\newcommand{\jsw}[1]{\comment{green}{JSW}{#1}}
+\newcommand{\hotcomment}[1]{\comment{red}{HOT}{#1}}
+
+\usepackage[backend=biber, style=numeric, maxnames=7]{biblatex}
+\addbibresource{refs.bib}
+
+\usepackage{graphicx,grffile}
+
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+
+\begin{document}
+
+Habari yenu?
+
+Beta is $\beta$ \cite{LawaLouw18}.
+
+\includegraphics{plot.Rout.pdf}
+
+\printbibliography
+
+\end{document}
