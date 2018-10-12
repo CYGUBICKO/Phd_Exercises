@@ -28,15 +28,22 @@ Sources += simple.tex
 
 simple.pdf: simple.tex
 
-clean: 
-	rm .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
+Sources += $(wildcard *.R)
+# plot.Rout: plot.R
 
-plot.Rout: plot.R
+######################################################################
+
+## Autorefs
 
 ## Drop = ~/Dropbox
 Sources += $(wildcard *.rmu)
-refs.bib: refs.rmu
-refs.html: refs.rmu
+# refs.bib: refs.rmu
+# refs.html: refs.rmu
+
+######################################################################
+
+clean: 
+	rm .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
 
 ######################################################################
 
