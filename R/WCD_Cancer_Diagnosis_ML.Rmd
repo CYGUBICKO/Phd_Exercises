@@ -60,7 +60,7 @@ The data set contains $569$ cases with $32$ variables. The diagnosis classificat
 ```{r usefulpackages, echo=T}
 # Useful Packages
 
-pkgs <- c("data.table", "Amelia", "stringr", "dplyr", "corrplot", "caret", "MASS", "openxlsx",
+pkgs <- c("data.table", "MASS", "Amelia", "stringr", "dplyr", "corrplot", "caret", "openxlsx",
           "ROCR", "caTools", "e1071", "ranger", "nnet")
 if (!"pacman" %in% installed.packages()[,1]){
   install.packages("pacman")
@@ -382,6 +382,17 @@ Using \textit{predict} function, we generate the clasiffication and posterior pr
 lda_predicted <- predict(lda_model, test_lda_df)
 knitr::kable(as.data.frame(table(lda_predicted)))
 ```
+
+```{r}
+tt <- lda_predicted %>% data.frame()
+tt2 <- as.data.frame(lda_predicted) %>%
+  count() %>% 
+  mutate(prop = n/sum(n)) %>% 
+  filter(lda_predicted == "M") %>% 
+  dplyr::select(prop)
+tt2
+```
+
 
 We can summarize the performance of the LDA classification  using $\textit{Confusion Matrix}$.
 
