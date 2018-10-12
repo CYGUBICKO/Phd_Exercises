@@ -107,4 +107,4 @@ clean:
 
 -include $(ms)/wrapR.mk
 -include $(ms)/pandoc.mk
--include $(ms)/flextex.mk
+## -include $(ms)/texdeps.mk
