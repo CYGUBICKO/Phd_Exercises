@@ -29,7 +29,7 @@ Sources += simple.tex
 simple.pdf: simple.tex
 
 Sources += $(wildcard *.R)
-# plot.Rout: plot.R
+plot.Rout: plot.R
 
 ######################################################################
 

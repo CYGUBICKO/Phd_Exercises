@@ -25,12 +25,12 @@ auc_df <- auc_df %>%
 	mutate(partition_set = paste("set", 1:n())) %>%
 	gather(model, auc_value, -partition_set)
 
-print(
-	ggplot(data=auc_df, 
-		aes(x=model, y=auc_value, colour=model)
-	) 
-	+ geom_boxplot()
-	+ ylab("AUC")
-	## + ggtitle("AUC scores across various sets of data partitions")
+(ggplot(data=auc_df, 
+	aes(x=reorder(model, -auc_value), y=auc_value, colour=model)
+) 
++ geom_boxplot()
++ ylab("AUC")
++ xlab("Models")
 )
+## + ggtitle("AUC scores across various sets of data partitions")
 
