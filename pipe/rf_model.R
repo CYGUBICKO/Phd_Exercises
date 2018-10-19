@@ -1,6 +1,7 @@
 library(caret)
 library(ROCR)
 library(dplyr)
+library(ranger)
 
 # Fit Random Forests model the the training data and test it on the test data
 

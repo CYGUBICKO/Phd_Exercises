@@ -9,11 +9,11 @@ nb_prediction_results <- list()
 nb_auc_results <- NULL
 nb_prop_malignant_results <- NULL 
 for (i in 1:length(seeds)){	
-	wdbc_train <- partition_sets[[i]]$train
+	wdbc_training <- partition_sets[[i]]$train
 	wdbc_test <- partition_sets[[i]]$test
 	result_name <- paste("nb_fit_result_set", i, sep = "")
 	nb_fit_results[[result_name]] <- train(diagnosis~.
-		, wdbc_train
+		, wdbc_training
 		, method = "nb"
 		, metric = "ROC"
 		, preProc = c("center", "scale")
@@ -46,4 +46,6 @@ for (i in 1:length(seeds)){
 		select(prop)
 		nb_prop_malignant_results <- c(nb_prop_malignant_results, nb_prop_malignant$prop)
 }
-nb_prop_malignant_results 
+
+print(nb_fit_results[[1]])
+print(nb_prop_malignant_results)
