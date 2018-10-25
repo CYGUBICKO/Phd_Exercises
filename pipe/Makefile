@@ -59,50 +59,37 @@ clean.Rout: wdbc.Rout clean.R
 
 ## Some analyses
 
-pca.Rout: clean.Rout pca.R
-
-lda.Rout: clean.Rout lda.R
-
-qda.Rout: clean.Rout qda.R
-
-## Compare lda to qda; lda is better!
-
-compare_models.Rout: lda.Rout qda.Rout compare_models.R
-
-######################################################################
-
 ## Caret package
 
+## Inputs and modlel control parameters
+control_parameters.Rout: control_parameters.R
+
 ## Define a partition function
-data_partition.Rout: clean.Rout data_partition.R
+data_partition.Rout: control_parameters.Rout clean.Rout data_partition.R
 
 ## Define the model_control function
-training_control.Rout: training_control.R
+training_control.Rout: control_parameters.Rout training_control.R
 
-lda_model.Rout: data_partition.Rout training_control.Rout lda_model.R
+## Training and Tuning parameters
+tuning_parameters.Rout: training_control.Rout tuning_parameters.R
 
-qda_model.Rout: data_partition.Rout training_control.Rout qda_model.R
+## Training function
+train.Rout: data_partition.Rout tuning_parameters.Rout train.R
 
-knn_model.Rout: data_partition.Rout training_control.Rout knn_model.R
+## Fit desired models. You can add the models within this function
+model_fits.Rout: train.Rout model_fits.R
 
-logistic_model.Rout: data_partition.Rout training_control.Rout logistic_model.R
+## Plot tuning/pruning results
+pruning_plots.Rout: model_fits.Rout pruning_plots.R
 
-nn_model.Rout: data_partition.Rout training_control.Rout nn_model.R
+## Make prediction and plot some metrics
+model_predictions.Rout: model_fits.Rout model_predictions.R
 
-dt_model.Rout: data_partition.Rout training_control.Rout dt_model.R
-
-nb_model.Rout: data_partition.Rout training_control.Rout nb_model.R
-
-rf_model.Rout: data_partition.Rout training_control.Rout rf_model.R
-
-## Compare the AUC estimates
-
-compare_auc.Rout: nn_model.Rout lda_model.Rout qda_model.Rout knn_model.Rout logistic_model.Rout dt_model.Rout nb_model.Rout rf_model.Rout compare_auc.R
 
 ######################################################################
 
 clean: 
-	rm .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
+	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
 
 ### Makestuff
 
