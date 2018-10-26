@@ -28,12 +28,69 @@ $(ms):
 
 ######################################################################
 
+## We will delete pipe soon
+
 subdirs += pipe testtex
+
+######################################################################
+
+Sources +=  notes.txt 
+
+## Code
+
+wdbc.data wdbc.names:
+	wget -O $@ "https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/$@"
+
+Sources += $(wildcard *.R)
+
+wdbc.Rout: wdbc.data wdbc.names wdbc.R
+
+## Make the excel file; this is a digression from the main pipeline
+Ignore += *.xlsx
+wdbc_excel.Rout: wdbc.Rout wdbc_excel.R
+wdbc_excel.xlsx: wdbc_excel.Rout ;
+
+clean.Rout: wdbc.Rout clean.R
+
+######################################################################
+
+## Some analyses
+
+## Caret package
+
+## Inputs and modlel control parameters
+control_parameters.Rout: control_parameters.R
+
+## Define a partition function
+data_partition.Rout: control_parameters.Rout clean.Rout data_partition.R
+
+## Define the model_control function
+training_control.Rout: control_parameters.Rout training_control.R
+
+## Training and Tuning parameters
+tuning_parameters.Rout: training_control.Rout tuning_parameters.R
+
+## Training function
+train.Rout: data_partition.Rout tuning_parameters.Rout train.R
+
+## Fit desired models. You can add the models within this function
+model_fits.Rout: train.Rout model_fits.R
+
+## Plot tuning/pruning results
+pruning_plots.Rout: model_fits.Rout pruning_plots.R
+
+## Make prediction and plot some metrics
+model_predictions.Rout: model_fits.Rout model_predictions.R
+
+######################################################################
+
+clean: 
+	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
+
+######################################################################
 
 ### Makestuff
 
 -include $(ms)/git.mk
 -include $(ms)/visual.mk
-
-# -include $(ms)/wrapR.mk
-
+-include $(ms)/wrapR.mk

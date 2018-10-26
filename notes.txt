@@ -45,3 +45,12 @@ Future:
 JD: investigate about a relocation advance
 
 Already in canada
+
+2018 Oct 26 (Fri)
+=================
+
+* Remake the probability density plot, but code (non-redundantly) by _observed_ diagnosis 
+
+* Keep working on understanding of algorithms, and particularly parameters (what is tuned and why, what is not tuned and why, what are the defaults or hyper-defaults (default ranges for tuned parameters))
+
+* Better colors (color brewer)
