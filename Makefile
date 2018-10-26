@@ -30,7 +30,7 @@ $(ms):
 
 ## We will delete pipe soon
 
-subdirs += pipe testtex
+subdirs += testtex
 
 ######################################################################
 
