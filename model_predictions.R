@@ -112,6 +112,7 @@ print(
 	ggplot(prob_pred_df, aes(prob))
 	+ geom_density(aes(fill = factor(obs_diag))
 		, alpha = 0.8
+		, n=32
 		)
 	+ facet_wrap(~model, scales = "free")
 	+	labs(title = "Predicted Probabilities"
