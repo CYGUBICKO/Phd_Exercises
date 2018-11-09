@@ -84,6 +84,15 @@ model_predictions.Rout: model_fits.Rout model_predictions.R
 
 ######################################################################
 
+# Step by step fitting to understand Tuning and Hyperparameters.
+## Neural Networks
+
+## Data preprocessing
+prepros_df.Rout: data_partition.Rout prepros_df.R
+
+nn_setup.Rout: prepros_df.Rout nn_setup.R
+
+######################################################################
 clean: 
 	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
 

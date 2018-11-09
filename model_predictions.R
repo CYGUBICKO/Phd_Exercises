@@ -29,6 +29,7 @@ for (i in 1:length(fitted_models)){
 			, type = "prob"
 		)
 		%>% mutate(model = model)
+		%>% mutate(obs_diag = test_df$diagnosis)
 	)
 
 	# Extract ROCs based on the predictions
@@ -76,20 +77,22 @@ print(
 
 ## Predicted probabilities
 prob_pred_df <- (Reduce(rbind, prob_pred_df)
-	%>% gather(Diagnosis, Prob, -model)
+	%>% gather(pred_diag, prob, -model, -obs_diag)
+	%>% filter(pred_diag=="M")
 )
+prob_pred_df
 
 print(
-	ggplot(prob_pred_df, aes(Prob))
-	+ geom_density(aes(fill = factor(Diagnosis))
-		, alpha = 0.8
-		)
+	ggplot(prob_pred_df, aes(x = reorder(obs_diag, -prob), y = prob)
+	)
+	+ geom_boxplot(varwidth = TRUE, fill = "plum")
 	+ facet_wrap(~model, scales = "free")
-	+	labs(title = "Predicted Probabilities"
-		, x = "Probabilities"
-		, fill = "Diagnosis"
+	+ labs(title = "Probability of predicting observed correctly having predicted 'M'"
+		, x = "Observed diagnosis"
+		, fill = "Predicted probability"
 		)
 )
+
 
 # ROC curves
 roc_df <- Reduce(rbind, roc_df)
@@ -98,6 +101,7 @@ print(
 	ggplot(roc_df, aes(x = x, y = y, group = model, colour = model))
 	+ geom_line()
 	+ scale_x_continuous(limits = c(0, 0.2))
+	+ scale_colour_manual(values = sample(colours(), length(levels(roc_df$model))))
 	+ scale_y_continuous(limits = c(0.8, 1))
 	+ labs(title = "ROCs comparison"
 		, x = "False positive rate"

@@ -2,7 +2,7 @@
 # which might need to be changed in the course of our analysis
 
 # Data partitioning
-part_ratio <- 0.75 # Train : test ratio
+part_ratio <- 0.8 # Train : test ratio
 lst <- FALSE # Whether/not to return a list (TRUE) or a data matrix
 
 # Ttrain control (training_control.R). See ?trainControl
