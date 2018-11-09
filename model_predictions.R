@@ -113,10 +113,10 @@ print(
 	+ geom_density(aes(fill = factor(obs_diag))
 		, alpha = 0.8
 		, n=32
-		)
+	)
 	+ facet_wrap(~model, scales = "free")
-	+	labs(title = "Predicted Probabilities"
+	+ labs(title = "Predicted Probabilities"
 		, x = "Probabilities"
 		, fill = "obs_diag"
-		)
+	)
 )
