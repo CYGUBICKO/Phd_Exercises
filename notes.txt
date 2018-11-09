@@ -1,3 +1,4 @@
+
 2018 March 23 (Fri)
 =================
 
@@ -55,3 +56,15 @@ Already in canada
 * Keep working on understanding of algorithms, and particularly parameters (what is tuned and why, what is not tuned and why, what are the defaults or hyper-defaults (default ranges for tuned parameters))
 
 * Better colors (color brewer)
+
+2018 Nov 09 (Fri)
+=================
+
+Why is it good to do multi-classification on a binary problem?
+* JD says not good, so delete or respond
+
+Let's figure out how to get neuralnet responses, AUC.
+
+What is neuralnet really measuring with the cross-entropy? How good are our good values? Is it worth trying again with two layers of neurons, since that sounds fun?
+
+We need to find out if cross-entropy is a pure training statistic or if it has some cross-validation. If not, we need to figure out how to do some cross-validation (maybe k-fold?)

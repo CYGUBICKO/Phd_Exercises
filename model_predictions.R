@@ -74,7 +74,6 @@ print(
 )
 
 
-
 ## Predicted probabilities
 prob_pred_df <- (Reduce(rbind, prob_pred_df)
 	%>% gather(pred_diag, prob, -model, -obs_diag)
@@ -109,3 +108,14 @@ print(
 		)
 )
 
+print(
+	ggplot(prob_pred_df, aes(prob))
+	+ geom_density(aes(fill = factor(obs_diag))
+		, alpha = 0.8
+		)
+	+ facet_wrap(~model, scales = "free")
+	+	labs(title = "Predicted Probabilities"
+		, x = "Probabilities"
+		, fill = "obs_diag"
+		)
+)
