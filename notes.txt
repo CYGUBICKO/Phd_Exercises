@@ -62,9 +62,12 @@ Already in canada
 
 Why is it good to do multi-classification on a binary problem?
 * JD says not good, so delete or respond
+-- Deleted
 
 Let's figure out how to get neuralnet responses, AUC.
+--  Added AUC plots
 
 What is neuralnet really measuring with the cross-entropy? How good are our good values? Is it worth trying again with two layers of neurons, since that sounds fun?
-
+--  Added a function to generate diffent combination of layers and neurons.
 We need to find out if cross-entropy is a pure training statistic or if it has some cross-validation. If not, we need to figure out how to do some cross-validation (maybe k-fold?)
+-- Added test AUC to compare the two. I will implement cv in the next update.

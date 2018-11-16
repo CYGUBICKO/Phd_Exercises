@@ -10,8 +10,6 @@ train_dfN <- (train_df
 	)
 	%>% mutate(
 		diagnosisN = ifelse(diagnosis=="M", 1, 0)
-		, diagnosisM = ifelse(diagnosis=="M", 1, 0)
-		, diagnosisB = ifelse(diagnosis=="B", 1, 0)
 	)
 	%>% select(-diagnosis)
 )
@@ -23,37 +21,19 @@ test_dfN <- (test_df
 	)
 	%>% mutate(
 		diagnosisN = ifelse(diagnosis=="M", 1, 0)
-		, diagnosisM = ifelse(diagnosis=="M", 1, 0)
-		, diagnosisB = ifelse(diagnosis=="B", 1, 0)
 	)
 	%>% select(-diagnosis)
 )
 
 # Create model formula
 
-modelForm1 <- as.formula(
+modelForm <- as.formula(
 	paste("diagnosisN ~ "
-		, paste(names(train_dfN)[!names(train_dfN) %in% c("diagnosisN"
-			, "diagnosisB"
-			, "diagnosisM"
-			)]
+		, paste(names(train_dfN)[!names(train_dfN) %in% c("diagnosisN")]
 		, collapse = "+"
 		)
 	)
 )
-
-
-modelForm2 <- as.formula(
-  paste("diagnosisM +  diagnosisB ~ "
-  	, paste(names(train_dfN)[!names(train_dfN) %in% c("diagnosisN"
-		, "diagnosisB"
-		, "diagnosisM"
-		)]
-		, collapse = "+"
-		)
-	)
-)
-
 
 
 

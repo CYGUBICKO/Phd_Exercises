@@ -79,7 +79,6 @@ prob_pred_df <- (Reduce(rbind, prob_pred_df)
 	%>% gather(pred_diag, prob, -model, -obs_diag)
 	%>% filter(pred_diag=="M")
 )
-prob_pred_df
 
 print(
 	ggplot(prob_pred_df, aes(x = reorder(obs_diag, -prob), y = prob)
@@ -92,6 +91,40 @@ print(
 		)
 )
 
+print(
+	ggplot(prob_pred_df)
+	+ geom_density(aes(x = prob, y = ..scaled.., fill = factor(obs_diag))
+		, alpha = 0.8
+		, n = 32
+		)
+	+ facet_wrap(~model, scales = "free")
+	+ labs(title = "Predicted Probabilities"
+		, x = "Probabilities"
+		, fill = "Observed Diagnosis"
+	)
+)
+
+# AUC curves
+model_resamples <- resamples(fitted_models)
+resample_df <- model_resamples$values
+old_names <- grep("Res|ROC", names(resample_df), value = TRUE)
+new_names <- gsub("~ROC|_fit", "", old_names)
+auc_df <- (resample_df
+	%>% select(old_names)
+	%>% setNames(new_names)
+	%>% gather(Model, AUC, -Resample)
+)
+
+print(
+	ggplot(auc_df
+		, aes(x = reorder(Model, -AUC), y = AUC, colour = Model)
+		)
+		+ geom_boxplot()
+		+ labs(title = "AUC comparison"
+			, x = "Model"
+			, y = "AUC"
+		)
+)
 
 # ROC curves
 roc_df <- Reduce(rbind, roc_df)
@@ -108,15 +141,4 @@ print(
 		)
 )
 
-print(
-	ggplot(prob_pred_df, aes(prob))
-	+ geom_density(aes(fill = factor(obs_diag))
-		, alpha = 0.8
-		, n=32
-	)
-	+ facet_wrap(~model, scales = "free")
-	+ labs(title = "Predicted Probabilities"
-		, x = "Probabilities"
-		, fill = "obs_diag"
-	)
-)
+
