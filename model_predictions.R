@@ -107,6 +107,7 @@ print(
 # AUC curves
 model_resamples <- resamples(fitted_models)
 resample_df <- model_resamples$values
+print(resample_df)
 old_names <- grep("Res|ROC", names(resample_df), value = TRUE)
 new_names <- gsub("~ROC|_fit", "", old_names)
 auc_df <- (resample_df
