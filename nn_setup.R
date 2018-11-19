@@ -18,11 +18,11 @@ set.seed(237)
 
 
 nnFunc <- function(layers){
-	error <- NULL # This the cross-entropy error
-	h_layers <- NULL
+	error <- numeric(length(layers)) 
+	h_layers <-  numeric(length(layers))
 	nn_train_aucN <- NULL
 	nn_test_aucN <- NULL
-	h_sort <- NULL
+	h_length <- NULL
 	for (i in 1:length(layers)){
 		test_df <- test_dfN
 		train_df <- train_dfN
@@ -37,9 +37,9 @@ nnFunc <- function(layers){
 		plot(nn_modelN, rep = "best", main = paste(i, "Hidden neurons"))
 		# Cross-entropy error
 		error[[i]] <- nn_modelN$result.matrix[1,1]
-		# Not really cool! 
+
 		h_layers[[i]] <- paste(layers[[i]], collapse = ",")  
-		h_sort[[i]] <- length(layers[[i]])
+		h_length[[i]] <- length(layers[[i]])
 
 		# Training performance
 		## Set up for AUC
@@ -63,15 +63,15 @@ nnFunc <- function(layers){
 	perf_df <- (data.frame(n = h_layers
 		, auc_train = nn_train_aucN
 		, auc_test = nn_test_aucN
-		, h_sort = h_sort
+		, h_length = h_length
 		)
-		%>% gather(Sample, score, -n, -h_sort)
+		%>% gather(Sample, score, -n, -h_length)
 		%>% mutate(Sample = gsub("auc_", "", Sample))
 	)
 
 	error_df <- data.frame(n = h_layers
 		, error = error
-		, h_sort = h_sort
+		, h_length = h_length
 	)
 	return(nn_resultN = list(
 		error_df = error_df
@@ -111,10 +111,10 @@ nn_resultN <- nnFunc(layers)
 
 # Compare Test and train AUC
 perf_df <- nn_resultN$perf_df
-#perf_df$n <- factor(perf_df$n, levels = levels(perf_df$n)[order(perf_df$h_sort)])
+#perf_df$n <- factor(perf_df$n, levels = levels(perf_df$n)[order(perf_df$h_length)])
 print(
 	ggplot(perf_df, 
-	aes(x = reorder(n, h_sort)
+	aes(x = reorder(n, h_length)
 	, y = score
 	, colour = Sample
 	, group = Sample)
@@ -132,7 +132,7 @@ print(
 error_df <- nn_resultN$error_df
 print(
 	ggplot(error_df,
-		aes(x = reorder(n, h_sort), y = error, group = 1)
+		aes(x = reorder(n, h_length), y = error, group = 1)
 		)
 		+ geom_line(colour = "blue")
 		+ geom_point()
