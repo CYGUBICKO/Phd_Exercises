@@ -5,18 +5,18 @@ theme_set(theme_bw())
 
 set.seed(4133)
 ## wt_decay <- c(0.00001, .01, .1, .2, .3, .4, .5, 1, 2)
-wt_decay <- exp(seq(-6, 0))
+wt_decay <- exp(seq(-5, 0))
 
 cv_df <- train_df
 n_folds <- 10
-inner_reps <- 10
+inner_reps <- 5
 n_train <- nrow(cv_df)
-folds_i <- sample(rep(1:n_folds, length.out = n_train))
 cv_pred_error <- matrix(0, nrow = n_folds, ncol = length(wt_decay))
 
 for (w in 1:length(wt_decay)){
 	for (f in 1:n_folds) {
 		for (r in 1:inner_reps){
+			folds_i <- sample(rep(1:n_folds, length.out = n_train))
 			index <- which(folds_i == f)
 			train <- cv_df[-index, ]
 			test <- cv_df[index, ]
