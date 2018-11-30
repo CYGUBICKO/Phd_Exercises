@@ -5,11 +5,11 @@ theme_set(theme_bw())
 
 set.seed(4133)
 ## wt_decay <- c(0.00001, .01, .1, .2, .3, .4, .5, 1, 2)
-wt_decay <- exp(seq(-5, 0))
+wt_decay <- exp(seq(-11, -1))
 
 cv_df <- train_df
 n_folds <- 10
-inner_reps <- 5
+inner_reps <- 20
 n_train <- nrow(cv_df)
 cv_pred_error <- matrix(0, nrow = n_folds, ncol = length(wt_decay))
 

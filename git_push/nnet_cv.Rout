@@ -1,0 +1,38 @@
+> 
+> # Generated using wrapR file nnet_cv.wrapR.r
+> source('nnet_cv.R', echo=TRUE)
+
+> library(nnet)
+
+> library(dplyr)
+
+> library(ggplot2)
+
+> theme_set(theme_bw())
+
+> set.seed(4133)
+
+> wt_decay <- exp(seq(-11, -1))
+
+> cv_df <- train_df
+
+> n_folds <- 10
+
+> inner_reps <- 20
+
+> n_train <- nrow(cv_df)
+
+> cv_pred_error <- matrix(0, nrow = n_folds, ncol = length(wt_decay))
+
+> for (w in 1:length(wt_decay)) {
++     for (f in 1:n_folds) {
++         for (r in 1:inner_reps) {
++             folds_i <- sample(rep(1:n_folds, leng .... [TRUNCATED] 
+
+> cv_result <- data.frame(Decay = wt_decay, Error = colMeans(cv_pred_error))
+
+> print(ggplot(cv_result, aes(x = Decay, y = Error)) + 
++     scale_x_log10() + geom_line() + geom_point() + labs(title = "CV Error", 
++     x = "Weig ..." ... [TRUNCATED] 
+> # Wrapped output file nnet_cv.wrapR.rout
+> 
