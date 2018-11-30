@@ -95,6 +95,7 @@ nn_setup.Rout: prepros_df.Rout nn_setup.R
 
 ## Understanding cv and weight decay
 nnet_cv.Rout: data_partition.Rout nnet_cv.R
+## nnet_cv.Rout.pdf:
 
 ######################################################################
 clean: 
