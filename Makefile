@@ -58,7 +58,7 @@ clean.Rout: wdbc.Rout clean.R
 
 ## Caret package
 
-## Inputs and modlel control parameters
+## Inputs and model control parameters
 control_parameters.Rout: control_parameters.R
 
 ## Define a partition function
