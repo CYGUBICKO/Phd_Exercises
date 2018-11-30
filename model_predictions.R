@@ -105,6 +105,9 @@ print(
 )
 
 # AUC curves
+
+col_scheme <- sample(colours(), length(models))
+
 model_resamples <- resamples(fitted_models)
 resample_df <- model_resamples$values
 print(resample_df)
@@ -121,6 +124,7 @@ print(
 		, aes(x = reorder(Model, -AUC), y = AUC, colour = Model)
 		)
 		+ geom_boxplot()
+		+ scale_colour_manual(values = col_scheme)
 		+ labs(title = "AUC comparison"
 			, x = "Model"
 			, y = "AUC"
@@ -134,7 +138,7 @@ print(
 	ggplot(roc_df, aes(x = x, y = y, group = model, colour = model))
 	+ geom_line()
 	+ scale_x_continuous(limits = c(0, 0.2))
-	+ scale_colour_manual(values = sample(colours(), length(levels(roc_df$model))))
+	+ scale_colour_manual(values = col_scheme)
 	+ scale_y_continuous(limits = c(0.8, 1))
 	+ labs(title = "ROCs comparison"
 		, x = "False positive rate"

@@ -93,6 +93,9 @@ prepros_df.Rout: data_partition.Rout prepros_df.R
 
 nn_setup.Rout: prepros_df.Rout nn_setup.R
 
+## Understanding cv and weight decay
+nnet_cv.Rout: data_partition.Rout nnet_cv.R
+
 ######################################################################
 clean: 
 	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog

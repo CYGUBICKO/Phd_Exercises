@@ -43,7 +43,7 @@ nnFunc <- function(layers){
 
 		# Training performance
 		## Set up for AUC
-		train_df$prob <-nn_modelN$net.result[[1]] 
+		train_df$prob <- nn_modelN$net.result[[1]] 
 		## Performance on the training data
 		nn_train_pred <- prediction(train_df$prob, train_df$diagnosisN)
 		nn_train_perf <- performance(nn_train_pred, "auc")
