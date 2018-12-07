@@ -1,5 +1,5 @@
 library(caret)
-set.seed(372)
+seed
 
 # Create training and test datasets
 df_index <- createDataPartition(

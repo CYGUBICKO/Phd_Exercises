@@ -9,14 +9,14 @@ wt_decay <- exp(seq(-11, -1))
 
 cv_df <- train_df
 n_folds <- 10
-inner_reps <- 20
+inner_reps <- 20 
 n_train <- nrow(cv_df)
 cv_pred_error <- matrix(0, nrow = n_folds, ncol = length(wt_decay))
-
+folds_i <- sample(rep(1:n_folds, length.out = n_train))
 for (w in 1:length(wt_decay)){
 	for (f in 1:n_folds) {
 		for (r in 1:inner_reps){
-			folds_i <- sample(rep(1:n_folds, length.out = n_train))
+#			folds_i <- sample(rep(1:n_folds, length.out = n_train))
 			index <- which(folds_i == f)
 			train <- cv_df[-index, ]
 			test <- cv_df[index, ]

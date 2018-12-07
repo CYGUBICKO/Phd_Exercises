@@ -1,5 +1,5 @@
 library(caret)
-
+seed
 # We use the trainControl function from caret package to control how the parameters in the training set are genretated : see ?trainControl
 
 model_control <- trainControl(

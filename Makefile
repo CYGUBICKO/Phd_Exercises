@@ -97,6 +97,13 @@ nn_setup.Rout: prepros_df.Rout nn_setup.R
 nnet_cv.Rout: data_partition.Rout nnet_cv.R
 ## nnet_cv.Rout.pdf:
 
+####################################################################
+
+## Ploynomial Regression
+
+polyr.Rout: model_predictions.Rout polyr.R
+
+
 ######################################################################
 clean: 
 	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog

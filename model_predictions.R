@@ -11,6 +11,7 @@ obs_pred_df <- list()
 prob_pred_df <- list()
 roc_df <- list()
 for (i in 1:length(fitted_models)){
+	seed
 	# Predicted class
 	model = gsub("_fit", "", names(fitted_models)[i])
 	obs_pred_df[[names(fitted_models)[i]]] <- data.frame(
@@ -48,7 +49,9 @@ for (i in 1:length(fitted_models)){
 
 # Format data outputs
 ## Class predictions
-obs_pred_df <- (Reduce(rbind, obs_pred_df)
+obs_pred_df1 <- Reduce(rbind, obs_pred_df)
+
+obs_pred_df <- (obs_pred_df1
 	%>% gather(Observation, Diagnosis, -model)
 )
 
