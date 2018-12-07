@@ -49,6 +49,6 @@ pcp_tab <- (bind_rows(caret_pcp, poly_pcp)
 	%>% arrange(-pcp)
 	%>% mutate(pcp = percent(pcp))
 )
-pcp_tab
+#pcp_tab
 
 
