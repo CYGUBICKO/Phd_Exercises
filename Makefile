@@ -99,7 +99,7 @@ nnet_cv.Rout: data_partition.Rout nnet_cv.R
 
 ####################################################################
 
-## Ploynomial Regression
+## Polynomial Regression
 
 polyr.Rout: model_predictions.Rout polyr.R
 
