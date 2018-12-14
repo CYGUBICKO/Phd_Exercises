@@ -103,7 +103,6 @@ nnet_cv.Rout: data_partition.Rout nnet_cv.R
 
 polyr.Rout: model_predictions.Rout polyr.R
 
-<<<<<<< HEAD
 ## Implementing NN GD
 
 sigmoid.Rout: sigmoid.R
@@ -111,12 +110,11 @@ feedfoward.Rout: sigmoid.Rout feedfoward.R
 my_nn_test.Rout: feedfoward.Rout clean.Rout my_nn_test.R
 
 ## NN Presentation
+Ignore  += nn_presentation-knitr*
+nn_presentation-knitr.pdf: nn_presentation.Rnw
 
-nn_presentation.pdf: nn_presentation.Rnw
-
-=======
->>>>>>> 3a5e3ff119586b70dd4e6b34d19d8bf09cba0f21
 ######################################################################
+
 clean: 
 	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
 
@@ -124,6 +122,7 @@ clean:
 
 ### Makestuff
 
+-include $(ms)/pandoc.mk
 -include $(ms)/git.mk
 -include $(ms)/visual.mk
 -include $(ms)/wrapR.mk
