@@ -99,10 +99,11 @@ nnet_cv.Rout: data_partition.Rout nnet_cv.R
 
 ####################################################################
 
-## Ploynomial Regression
+## Polynomial Regression
 
 polyr.Rout: model_predictions.Rout polyr.R
 
+<<<<<<< HEAD
 ## Implementing NN GD
 
 sigmoid.Rout: sigmoid.R
@@ -113,6 +114,8 @@ my_nn_test.Rout: feedfoward.Rout clean.Rout my_nn_test.R
 
 nn_presentation.pdf: nn_presentation.Rnw
 
+=======
+>>>>>>> 3a5e3ff119586b70dd4e6b34d19d8bf09cba0f21
 ######################################################################
 clean: 
 	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog

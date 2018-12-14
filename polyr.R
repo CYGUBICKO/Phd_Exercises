@@ -1,6 +1,7 @@
 library(dplyr)
 library(polyreg)
 library(scales)
+
 seed
 
 # This script fits polynomial of degree to our data
@@ -17,12 +18,11 @@ test_df <- (test_df
 
 # Cross validation to pick optimal no. of degrees
 poly_cv <- xvalPoly(train_df
-	, 3
-	, 3
-	, "glm"
+	, maxDeg=3
+	, use="glm"
 )
 
-poly_cv
+print(poly_cv)
 
 # Fit the polynomial
 poly_model <- polyFit(train_df
@@ -50,5 +50,4 @@ pcp_tab <- (bind_rows(caret_pcp, poly_pcp)
 	%>% mutate(pcp = percent(pcp))
 )
 pcp_tab
-
 
