@@ -110,6 +110,8 @@ feedfoward.Rout: sigmoid.Rout feedfoward.R
 my_nn_test.Rout: feedfoward.Rout clean.Rout my_nn_test.R
 
 ## NN Presentation
+Sources += *.Rnw
+Ignore += figure
 Ignore  += nn_presentation-knitr*
 nn_presentation-knitr.pdf: nn_presentation.Rnw
 

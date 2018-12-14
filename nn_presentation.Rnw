@@ -15,8 +15,6 @@
 \title{Neural Networks}
 \author{Steve}
 
-
-
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 \frame{\titlepage}
