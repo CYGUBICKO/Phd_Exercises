@@ -103,6 +103,15 @@ nnet_cv.Rout: data_partition.Rout nnet_cv.R
 
 polyr.Rout: model_predictions.Rout polyr.R
 
+## Implementing NN GD
+
+sigmoid.Rout: sigmoid.R
+feedfoward.Rout: sigmoid.Rout feedfoward.R
+my_nn_test.Rout: feedfoward.Rout clean.Rout my_nn_test.R
+
+## NN Presentation
+
+nn_presentation.pdf: nn_presentation.Rnw
 
 ######################################################################
 clean: 
