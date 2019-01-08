@@ -26,3 +26,18 @@ all.time
 *.Rout*
 *.wrapR.*
 *.Rds
+
+# Ignore other files from .tex
+*.log
+*.synctex.gz
+*.vrb
+*.html
+*.snm
+*.toc
+*.pdf
+*.nav
+
+## Other directories
+R/
+testtex/
+
