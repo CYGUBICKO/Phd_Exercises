@@ -28,14 +28,14 @@ all.time
 *.Rds
 
 ## Other files from .tex
-#*.log
-#*.synctex.gz
-#*.vrb
-#*.html
-#*.snm
-#*.toc
-#*.pdf
-#*.nav
+*.log
+*.synctex.gz
+*.vrb
+*.html
+*.snm
+*.toc
+*.pdf
+*.nav
 
 ## Other directories
 R/
