@@ -1,0 +1,353 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{pgf,tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows}
+\usepackage{xcolor}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{hyperref}
+
+%\usepackage{enumerate}
+%\numberwithin{equation}{section}
+
+\title{Neural Networks}
+\author{Steve}
+
+
+
+\begin{document}
+%\SweaveOpts{concordance=TRUE}
+\frame{\titlepage}
+
+\begin{frame}[fragile]{}
+\begin{block}{}
+\pagestyle{empty}
+
+\def\layersep{3.7cm}
+
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=green!50];
+    \tikzstyle{output neuron}=[neuron, fill=red!50];
+    \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,4}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+        \node[input neuron, pin=left:$X_\y$] (I-\name) at (0,-\y) {};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,5}
+        \path[yshift=0.5cm]
+            node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
+
+    % Draw the output layer node
+    \node[output neuron,pin={[pin edge={->}]right:Output ($\hat{y}$)}, right of=H-3] (O) {};
+
+    % Connect every node in the input layer with every node in the
+    % hidden layer.
+    \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,5}
+            \path (I-\source) edge (H-\dest);
+
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,5}
+        \path (H-\source) edge (O);
+
+    % Annotate the layers
+    \node[annot,above of=H-1, node distance=1cm] (hl) {Hidden layer \textcolor{red}{($H^{(1)}$)}};
+    \node[annot,left of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{(1)}$)}};
+    \node[annot,right of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{(2)}$)}};
+    \node[annot,left of=hl] {Input layer};
+    \node[annot,right of=hl] {Output layer \textcolor{red}{($H^{(2)}$)}};
+    \node[annot,below of=H-3] (hl2) {Activation \textcolor{red}{$a^{(1)}$}};
+    \node[annot,right of=hl2] {Activation \textcolor{red}{$a^{(2)}$}};
+\end{tikzpicture}
+% End of code
+\end{block}
+\end{frame}
+
+
+\begin{frame}
+\begin{tikzpicture}[
+init/.style={
+  draw,
+  circle,
+  inner sep=2pt,
+  font=\Huge,
+  join = by -latex
+},
+squa/.style={
+  draw,
+  inner sep=2pt,
+  font=\Large,
+  join = by -latex
+},
+start chain=2,node distance=13mm
+]
+\node[on chain=2] 
+  (x2) {$x_2$};
+\node[on chain=2,join=by o-latex] 
+  {$w_2$};
+\node[on chain=2,init] (sigma) 
+  {$\displaystyle\Sigma$};
+\node[on chain=2,squa,label=above:{\parbox{2cm}{\centering Activation \\ function}}]   
+  {$f$};
+\node[on chain=2,label=above:Output,join=by -latex] 
+  {$\hat{y}$};
+\begin{scope}[start chain=1]
+\node[on chain=1] at (0,1.5cm) 
+  (x1) {$x_1$};
+\node[on chain=1,join=by o-latex] 
+  (w1) {$w_1$};
+\end{scope}
+\begin{scope}[start chain=3]
+\node[on chain=3] at (0,-1.5cm) 
+  (x3) {$x_3$};
+\node[on chain=3,join=by o-latex] 
+  (w3) {$w_3$};
+\end{scope}
+\begin{scope}[start chain=4]
+\node[on chain=4] at (0,-2.5cm) 
+  (x4) {$x_4$};
+\node[on chain=4,label=below:Weights,join=by o-latex] 
+  (w4) {$w_4$};
+\end{scope}
+\node[label=above:\parbox{2cm}{\centering Bias \\ $b$}] at (sigma|-w1) (b) {};
+
+\draw[-latex] (w1) -- (sigma);
+\draw[-latex] (w3) -- (sigma);
+\draw[-latex] (w4) -- (sigma);
+\draw[o-latex] (b) -- (sigma);
+
+\draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Inputs} (x4.south west);
+\end{tikzpicture}
+
+\end{frame}
+
+
+\begin{frame}{Components}
+\begin{itemize}
+\item \textbf{Layers} - Input, Hidden and Output
+\begin{itemize}
+\item \textbf{Neuron/Node/Unit} - Receives input and \textcolor{red}{computes} and output
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{Synapse} - Associated weights.
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{Activation function} - Introduces \textcolor{red}{nonlinearity} into the neuron output.
+\begin{itemize}
+\item Sigmoid (Logistic Activation Function)\\
+$a(x) = \frac{1}{1 + exp(-x)}$
+\item Tanh (hyperbolic tangent Activation Function) \\
+$a(x) = tanh(x) = \frac{2}{1 + exp(-2x)} - 1 = 2 sigmoid(2x) - 1$
+\item ReLU (Rectified Linear Unit Activation Function)
+$a(x) = max(0, x)$
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{}
+<<compareAFunc, echo=FALSE>>=
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(openxlsx)
+theme_set(theme_bw())
+
+set.seed(237)
+
+# Function
+source("sigmoid.R")
+source("feedforward.R")
+source("backprop.R")
+source("sigmoidPrime.R")
+source("backprop.R")
+source("trainMynnet.R")
+source("predictNnet.R")
+
+x <- seq(-3, 3, 0.1)
+df <- (data.frame(x = x
+                 , Sigmoid = sigmoid(x)
+                 , Tanh = 2*sigmoid(2*x) - 1
+                 )
+       %>% gather(Act_Func, Value, -x)
+)
+
+
+print(
+  ggplot(df, aes(x = x, y = Value, group = Act_Func, color = Act_Func)
+         )
+  + geom_line()
+  + labs(color = "Activation Function"
+         , title = "NN Activation functions"
+         , x = "x"
+         , y = "a(x)"
+         )
+  + theme(legend.position = c(0.2, .9),
+          plot.title = element_text(hjust = 0.5)
+          )
+)
+
+@
+
+\end{frame}
+
+
+\begin{frame}{Feed-forward}
+
+Consider,
+\begin{itemize}
+\item[] $H^{(1)}_1 = X_1W^{(1)}_{1,1} + X_2W^{(1)}_{2,1} + X_3W^{(1)}_{3,1} + X_4W^{(1)}_{4,1}$
+\pause
+\item[] $H^{(1)}_2 = X_1W^{(1)}_{1,2} + X_2W^{(1)}_{2,2} + X_3W^{(1)}_{3,2} + X_4W^{(1)}_{4,2}
+$
+\pause
+\item[]\textcolor{red}{$\vdots$}
+\end{itemize}
+
+\pause
+$H^{2}$ `component' is the \textcolor{blue}{sum of weighted inputs} to each neuron.
+\begin{align}
+H^{(1)} = XW^{(1)} \label{eqn1}
+\end{align}
+
+\end{frame}
+
+\begin{frame}{Feed-forward}
+
+Apply activation function to \autoref{eqn1}
+\begin{align}
+a^{(1)} = a(H^{(1)}) \label{eqn2}
+\end{align}
+
+Propagate \ref{eqn2} to the output layer
+\begin{align}
+H^{(2)} = a^{(1)}W^{(2)}  \label{eqn3}\\
+\Longrightarrow \hat{y} =  a^{(2)}= a(H^{(2)}) \label{eqn4}
+\end{align}
+\end{frame}
+% 
+% \begin{frame}[fragile]{Feed-forward: R}
+% <<>>=
+% sigmoid
+% @
+% 
+% <<>>=
+% feedforward
+% @
+% 
+% \end{frame}
+% 
+% \begin{frame}[fragile]{}
+% <<echo=TRUE>>=
+% df <- read.xlsx("wdbc_dataset.xlsx", sheet = 2)
+% 
+% x <- (df
+% 	%>% select(-id_number, -diagnosis)
+% 	%>% mutate_at(
+%         funs(as.numeric(scale(.)))
+%         , .vars = vars()
+%         )
+% )
+% 
+% y <- ifelse(df$diagnosis=="M", 1, 0)
+% 
+% hidden <- 5
+% n_ind_vars <- ncol(x) + 1
+% w1 <- matrix(rnorm(n_ind_vars * hidden), n_ind_vars, hidden)
+% w2 <- as.matrix(rnorm(hidden + 1))
+% 
+% ff_out <- feedforward(x, w1, w2)
+% yhat_df <- data.frame(y = y
+% 	, y_hat = ifelse(ff_out$yhat>=0.5, 1, 0))
+% 1 - mean(y==yhat_df)
+% @
+% 
+% \end{frame}
+
+\begin{frame}{Back propagation}
+\begin{itemize}
+\item Estimate weights that ensures the model fits the training data well.
+\begin{align}
+J = \sum{\frac{1}{2}(y - \hat{y})^2}
+\end{align}
+\pause
+\item[] 
+\begin{align}
+J(W) = \frac{1}{2} \sum{\left(y - a(a(XW^{(1)})W^{(2)})\right)^2}
+\end{align}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Gradient descent}
+\includegraphics[scale=0.5]{gradient_descent.png}
+\end{frame}
+
+\begin{frame}{Gradient descent}
+\begin{block}{}
+\begin{align*}
+W_{t+1} = W_t - \gamma \Delta J(W_t)
+\end{align*}
+\end{block}
+Compute $\frac{\partial J}{\partial W^{(1)}}$ and $\frac{\partial J}{\partial W^{(2)}}$
+\begin{align*}
+\frac{\partial J}{\partial W^{(2)}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{(2)}} \\
+&= -(y - \hat{y})\textcolor{blue}{\frac{\partial \hat{y}}{\partial H^{(2)}} \frac{\partial H^{(2)}}{\partial W^{(2)}}} \\
+%% Additional notes
+%% Since $\hat{y} = a^{(2)}(H^{(2)}$
+&=  -(y - \hat{y})\textcolor{blue}{a'(H^{(2)})} \frac{\partial H^{(2)}}{\partial W^{(2)}} \\
+&=  -(y - \hat{y})\textcolor{blue}{a'(H^{(2)})} \frac{\partial H^{(2)}}{\partial W^{(2)}} \\
+%% H^{(2)} = a^{(1)}W^{(2)} \Longrightarrow frac{\partial H^{(2)}}{\partial W^{(2)}} = a^{(1)} and $a^{(2)}T$ takes care of the omitted summation
+\Longrightarrow \frac{\partial J}{\partial W^{(2)}} &=  -\textcolor{blue}{a^{(1)T}}(y - \hat{y})a'(H^{(2)})\\
+\end{align*}
+\end{frame}
+
+\begin{frame}{Gradient descent}
+\begin{align*}
+\frac{\partial J}{\partial W^{(1)}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{(1)}} \\
+&= -(y - \hat{y})\frac{\partial \hat{y}}{\partial H^{(2)}} \frac{\partial H^{(2)}}{\partial W^{(1)}}\\
+&= -(y - \hat{y})a'(H^{(2)})  \frac{\partial H^{(2)}}{\partial W^{(1)}}\\
+&= -(y - \hat{y})a'(H^{(2)})  \color{blue}{\frac{\partial H^{(2)}}{\partial a^{(1)}} \frac{\partial a^{(1)}}{\partial W^{(1)}}}\\
+&= -(y - \hat{y})a'(H^{(2)}) \color{blue}{W^{(2)T}} \frac{\partial a^{(1)}}{\partial W^{(1)}}\\
+&= -(y - \hat{y})a'(H^{(2)})  W^{(2)T} \color{blue}{\frac{\partial a^{(2)}}{\partial H^{(2)}} \frac{\partial H^{(2)}}{\partial W^{(1)}}}\\
+\Longrightarrow \frac{\partial J}{\partial W^{(1)}} &= -X^T (y - \hat{y})a'(H^{(2)})  W^{(2)T} a'(H^{(1)})
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{Remarks}
+\begin{itemize}
+\item[1. ] Starting values
+\item[2. ] Overfitting and Stopping Criterion
+\begin{itemize}
+\item \textcolor{red}{Reduce training error} to some predetermined threshold $\longrightarrow$ \textcolor{red}{overffiting}.
+\item Regularization
+\[
+J(W) = \sum{\frac{1}{2}(y - \hat{y})^2}/n + \frac{1}{2}\lambda\left(\sum{W_1} + \sum{W_2} \right)
+\]
+$\lambda$ - Regularization hyper parameter
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Remarks}
+\begin{itemize}
+\item[3. ] Convergence and Local Minima
+\includegraphics[scale=0.5]{unconvex.png}
+\end{itemize}
+\end{frame}
+
+
+\end{document}

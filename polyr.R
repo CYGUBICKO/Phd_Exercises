@@ -18,11 +18,11 @@ test_df <- (test_df
 
 # Cross validation to pick optimal no. of degrees
 poly_cv <- xvalPoly(train_df
-	, maxDeg=3
+	, maxDeg=2
 	, use="glm"
 )
 
-print(poly_cv)
+#print(poly_cv)
 
 # Fit the polynomial
 poly_model <- polyFit(train_df

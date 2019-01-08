@@ -1,0 +1,231 @@
+Neural Networks
+========================================================
+author: Steve
+date: `r as.Date(Sys.time())`
+autosize: true
+
+
+
+```{r usefulpackages, echo=FALSE}
+# Useful Packages
+pkgs <- c("DT", "openxlsx", "webshot", "dplyr", "tidyverse", "ROCR")
+if (!"pacman" %in% installed.packages()[,1]){
+  install.packages("pacman")
+}
+pacman::p_load(pkgs, install = T, character.only = T)
+#webshot::install_phantomjs()
+```
+
+
+
+Data 
+========================================================
+
+* [Breast Cancer Wisconsin Data Set](https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(original)
+
+> - The data set contains $569$ cases with $31$ variables. The diagnosis classification is either (M = Malignant) or (B = Benign).
+
+
+===========================================================
+
+
+
+```{r, echo=FALSE}
+des <- read.xlsx("wdbc_dataset.xlsx", sheet = 1)
+df <- read.xlsx("wdbc_dataset.xlsx", sheet = 2)
+
+DT::datatable(des
+    , height = "400px"
+    , width = "1500px"
+    , options = list(pageLength = 32)
+  )
+```
+
+Data Partition
+===========================================================
+
+```{r, echo=TRUE}
+df2 <- (df
+        %>% select(-id_number, -diagnosis)
+        %>% transmute_if(is.numeric, scale)
+        %>% add_column(diagnosis = df$diagnosis)
+)
+
+#Training proportion
+prop <- 0.75 
+n_train <- floor(0.75*nrow(df2))
+index <- sample(1:nrow(df2), n_train)
+
+# Train data
+train_df <- df2[index, ]
+x_train <- (train_df
+    %>% select(-diagnosis)
+  )
+y_train <- ifelse(train_df$diagnosis=="M", 1, 0)
+
+
+# Test data
+test_df <- df2[-index, ]
+x_test <- (test_df
+    %>% select(-diagnosis)
+  )
+y_test <- ifelse(test_df$diagnosis=="M", 1, 0)
+
+```
+
+
+
+Feed-forward
+=======================================================
+
+```{r, echo=TRUE}
+source("feedforward.R")
+source("sigmoid.R")
+feedforward
+
+```
+
+Feed-forward fitting
+========================================================
+
+```{r}
+hidden <- 5
+n_ind_vars <- ncol(x_train) + 1
+w1 <- matrix(
+  rnorm(n_ind_vars * hidden)
+    , n_ind_vars
+    , hidden
+  )
+w2 <- as.matrix(rnorm(hidden + 1))
+
+ff_out <- feedforward(x_train
+    , w1
+    , w2
+  )
+
+# Training error
+yhat <- ifelse(ff_out$yhat>=0.5, 1, 0)
+1 - mean(y_train==yhat)
+
+
+```
+
+
+Back propagation
+=====================================================================
+
+```{r, echo=TRUE}
+source("backprop.R")
+source("sigmoidPrime.R")
+backprop
+```
+
+BP Fitting
+=================================================================
+
+```{r, echo=TRUE}
+bp_out <- backprop(x_train
+    , y_train
+    , yhat = ff_out$yhat
+    , w1
+    , w2
+    , lambda = 1e-2
+    , learn_rate = 1e-2
+    , H1 = ff_out$H1
+    , H2 = ff_out$H2
+    , a1 = ff_out$a1
+  )
+
+#bp_out$w1
+bp_out$w2
+```
+
+
+Training the NN
+==================================================================
+
+```{r, echo=TRUE}
+source("trainMynnet.R")
+trainMynnet
+
+```
+
+=================================================================
+
+```{r, echo=TRUE}
+nnet_out <- trainMynnet(x_train
+    , y_train
+  )
+
+# Training error
+yhat <- ifelse(nnet_out$yhat>=0.5, 1, 0)
+round(1 - mean(y_train==yhat), digits = 5)
+```
+
+
+Testing NN
+=================================================================
+
+```{r, echo=TRUE}
+source("predictNnet.R")
+predictNnet
+
+```
+
+
+=================================================================
+
+```{r, echo=TRUE}
+nnet_test <- predictNnet(nnet_out, x_test)
+
+# Training error
+round(1 - mean(nnet_test$class==y_test), digits = 5)
+```
+
+
+================================================================
+```{r, echo=FALSE}
+y_test <- ifelse(y_test==1, "M", "B")
+rocr_pred <- prediction(nnet_test$probs
+  , y_test
+)
+rocr_est <- performance(rocr_pred
+  , "tpr"
+  , "fpr"
+  )
+rocr_df <- data.frame(x = rocr_est@x.values[[1]]
+  , y = rocr_est@y.values[[1]]
+)
+
+print(
+   ggplot(rocr_df, aes(x = x, y = y))
+   + geom_line(aes(colour = "blue"))
+   + coord_cartesian(xlim = c(0, 0.2), ylim = c(0.8, 1)) 
+   + guides(colour=FALSE)
+   + labs(title = "ROC Curve"
+      , x = "False positive rate"
+      , y = "True positive rate"
+      )
+)
+
+```
+
+
+Bootstrap
+=======================================================
+
+```{r}
+source("aucBoot.R")
+aucBoot
+```
+
+
+====================================================
+```{r}
+df_pred <- data.frame(probs = nnet_test$probs
+                      , response = y_test
+                      )
+boot_auc <- aucBoot(df_pred, 2000)
+knitr::kable(boot_auc$estimates)
+```
+

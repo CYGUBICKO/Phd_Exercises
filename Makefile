@@ -122,6 +122,12 @@ clean:
 
 ######################################################################
 
+nn_presentation.tex: Presentation/nn_presentation.Rnw
+
+nn_presentation.pdf: nn_presentation.tex
+
+
+
 ### Makestuff
 
 -include $(ms)/pandoc.mk
