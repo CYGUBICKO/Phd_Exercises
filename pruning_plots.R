@@ -4,7 +4,7 @@ library(purrr)
 best_tune <- list()
 tune_lst <- list()
 for (i in 1:length(fitted_models)){
-	seed
+	set.seed(237)
 	b_tune <- fitted_models[[i]]$bestTune
 	rownames(b_tune) <- NULL
 	best_tune[[names(fitted_models)[i]]] <- b_tune

@@ -11,7 +11,7 @@ obs_pred_df <- list()
 prob_pred_df <- list()
 roc_df <- list()
 for (i in 1:length(fitted_models)){
-	seed
+	set.seed(237)
 	# Predicted class
 	model = gsub("_fit", "", names(fitted_models)[i])
 	obs_pred_df[[names(fitted_models)[i]]] <- data.frame(
@@ -78,7 +78,10 @@ print(
 
 
 ## Predicted probabilities
-prob_pred_df <- (Reduce(rbind, prob_pred_df)
+prob_pred_df1 <- prob_pred_df
+prob_pred_df1
+
+prob_pred_df <- (Reduce(rbind, prob_pred_df1)
 	%>% gather(pred_diag, prob, -model, -obs_diag)
 	%>% filter(pred_diag=="M")
 )
@@ -113,7 +116,7 @@ col_scheme <- sample(colours(), length(models))
 
 model_resamples <- resamples(fitted_models)
 resample_df <- model_resamples$values
-print(resample_df)
+
 old_names <- grep("Res|ROC", names(resample_df), value = TRUE)
 new_names <- gsub("~ROC|_fit", "", old_names)
 auc_df <- (resample_df

@@ -83,6 +83,10 @@ pruning_plots.Rout: model_fits.Rout pruning_plots.R
 model_predictions.Rout: model_fits.Rout model_predictions.R
 ## .model_predictions.wrapR.rout for warnings
 
+## ROC-AUC Confidence Intervals
+auc_ci.Rout: model_predictions.Rout auc_ci.R
+
+
 ######################################################################
 
 # Step by step fitting to understand Tuning and Hyperparameters.
@@ -103,17 +107,6 @@ nnet_cv.Rout: data_partition.Rout nnet_cv.R
 
 polyr.Rout: model_predictions.Rout polyr.R
 
-## Implementing NN GD
-
-sigmoid.Rout: sigmoid.R
-feedfoward.Rout: sigmoid.Rout feedfoward.R
-my_nn_test.Rout: feedfoward.Rout clean.Rout my_nn_test.R
-
-## NN Presentation
-Sources += *.Rnw
-Ignore += figure
-Ignore  += nn_presentation-knitr* nn_presentation.tex
-nn_presentation-knitr.pdf: nn_presentation.Rnw
 
 ######################################################################
 
@@ -121,11 +114,6 @@ clean:
 	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
 
 ######################################################################
-
-nn_presentation.tex: Presentation/nn_presentation.Rnw
-
-nn_presentation.pdf: nn_presentation.tex
-
 
 
 ### Makestuff

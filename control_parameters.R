@@ -4,7 +4,7 @@
 # Data partitioning
 part_ratio <- 0.8 # Train : test ratio
 lst <- FALSE # Whether/not to return a list (TRUE) or a data matrix
-seed <- set.seed(237)
+set.seed(237)
 
 # Ttrain control (training_control.R). See ?trainControl
 ctl_method <- "cv"

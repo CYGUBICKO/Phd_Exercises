@@ -1,5 +1,5 @@
 library(caret)
-seed
+set.seed(237)
 
 # List the models to fit
 models <- c(

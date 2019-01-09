@@ -3,7 +3,7 @@ library(caret)
 model_train_fit <- function(train_methods){
 	fit_result <- list()
 	for (train_method in train_methods){
-	seed
+	set.seed(237)
 		fit_name <- paste(train_method, "_", "fit", sep = "")
 		tryCatch(
 			if (train_method=="nnet"){

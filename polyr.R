@@ -2,7 +2,7 @@ library(dplyr)
 library(polyreg)
 library(scales)
 
-seed
+set.seed(237)
 
 # This script fits polynomial of degree to our data
 
