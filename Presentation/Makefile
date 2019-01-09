@@ -32,7 +32,7 @@ $(ms):
 
 ## Training and test data already saved
 
-new_data_partition.Rout: ../prepros_df.Rout new_data_partition.R
+new_data_partition.Rout: ../data_partition.Rout new_data_partition.R
 
 ## Setup inputs
 

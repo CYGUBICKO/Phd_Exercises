@@ -19,7 +19,7 @@ model_train_fit <- function(train_methods){
 				)
 			} 
 			else{
-				seed
+				set.seed(237)
 				fit_result[[fit_name]] <- train(
 					diagnosis ~ .
 						, data = train_df

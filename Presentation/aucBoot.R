@@ -1,3 +1,5 @@
+set.seed(237)
+
 #### ---- This script contains functions to compute CI using bootstrap
 
 # 1. aucFuc: Computes auc.Input is a dataframe of predicted class probs and the test class (observed)
