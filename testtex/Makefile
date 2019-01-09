@@ -5,11 +5,7 @@ current: target
 
 ##################################################################
 
-## Defs
-
-# stuff
-
-Sources += Makefile .ignore .gitignore
+Sources += Makefile 
 
 ms = makestuff
 -include $(ms)/os.mk
@@ -18,9 +14,9 @@ ms = makestuff
 
 ## makestuff as uplink
 Sources += $(ms)
-Makefile: $(ms) $(ms)/Makefile
-$(ms): ../makestuff
-	/bin/ln -fs $< $@
+Makefile: $(ms)/Makefile
+$(ms) $(ms)/Makefile: ../makestuff
+	/bin/ln -fs $< .
 
 ######################################################################
 
