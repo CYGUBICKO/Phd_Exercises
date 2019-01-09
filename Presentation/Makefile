@@ -84,10 +84,17 @@ boot_auc.Rout: nnet_test.Rout aucBoot.Rout boot_auc.R
 %.tex: %.Rnw
 	Rscript -e "library(knitr); knit('$*.Rnw')"
 
+Ignore += nn_presentation.tex
 nn_presentation.tex: nn_presentation.Rnw
+
+nn_presentation.rs.tex:
+	$(CP) nn_presentation.tex $@
 
 nn_presentation.pdf: nn_presentation.tex
 
+Ignore += *.diff
+nn_presentation.diff: nn_presentation.rs.tex nn_presentation.tex 
+	$(diff)
 
 ######################################################################
 
@@ -101,9 +108,9 @@ clean:
 
 ### Makestuff
 
+-include $(ms)/texdeps.mk
 -include $(ms)/pandoc.mk
 -include $(ms)/git.mk
 -include $(ms)/visual.mk
 -include $(ms)/wrapR.mk
--include $(ms)/texdeps.mk
 -include $(ms)/autorefs.mk
