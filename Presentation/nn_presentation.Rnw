@@ -16,8 +16,6 @@
 \title{Neural Networks}
 \author{Steve}
 
-
-
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 \SweaveOpts{concordance=TRUE}
@@ -185,7 +183,6 @@ df <- (data.frame(x = x
                  )
        %>% gather(Act_Func, Value, -x)
 )
-
 
 print(
   ggplot(df, aes(x = x, y = Value, group = Act_Func, color = Act_Func)

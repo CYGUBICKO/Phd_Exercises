@@ -84,8 +84,9 @@ boot_auc.Rout: nnet_test.Rout aucBoot.Rout boot_auc.R
 %.tex: %.Rnw
 	Rscript -e "library(knitr); knit('$*.Rnw')"
 
+Sources += nn_presentation.Rnw
 Ignore += nn_presentation.tex
-nn_presentation.tex: nn_presentation.Rnw
+## nn_presentation.pdf: nn_presentation.Rnw
 
 Ignore += *.rs.tex:
 nn_presentation.rs.tex:
