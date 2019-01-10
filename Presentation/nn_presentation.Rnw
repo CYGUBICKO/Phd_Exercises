@@ -8,6 +8,7 @@
 \usepackage{amsmath}
 \usepackage{verbatim}
 \usepackage{hyperref}
+\usepackage{float}
 
 %\usepackage{enumerate}
 %\numberwithin{equation}{section}
@@ -18,7 +19,8 @@
 
 
 \begin{document}
-%\SweaveOpts{concordance=TRUE}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{concordance=TRUE}
 \frame{\titlepage}
 
 \begin{frame}[fragile]{}
@@ -157,7 +159,7 @@ $a(x) = max(0, x)$
 \end{frame}
 
 \begin{frame}[fragile]{}
-<<compareAFunc, echo=FALSE>>=
+<<compareAFunc, fig=TRUE, echo=FALSE>>=
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -291,8 +293,11 @@ J(W) = \frac{1}{2} \sum{\left(y - a(a(XW^{(1)})W^{(2)})\right)^2}
 
 \end{frame}
 
-\begin{frame}{Gradient descent}
-\includegraphics[scale=0.5]{gradient_descent.png}
+\begin{frame}[fragile]{Gradient descent}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.2]{gradient_descent.png}
+\end{figure}
 \end{frame}
 
 \begin{frame}{Gradient descent}
