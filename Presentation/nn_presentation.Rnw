@@ -17,8 +17,6 @@
 \author{Steve}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
-\SweaveOpts{concordance=TRUE}
 \frame{\titlepage}
 
 \begin{frame}[fragile]{}
@@ -157,7 +155,7 @@ $a(x) = max(0, x)$
 \end{frame}
 
 \begin{frame}[fragile]{}
-<<compareAFunc, fig=TRUE, echo=FALSE>>=
+<<compare, echo=FALSE,include=FALSE>>=
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -199,6 +197,8 @@ print(
 )
 
 @
+
+\includegraphics[scale=0.5]{figure/compare-1.pdf}
 
 \end{frame}
 

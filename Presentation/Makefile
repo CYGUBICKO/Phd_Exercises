@@ -88,6 +88,9 @@ Sources += nn_presentation.Rnw
 Ignore += nn_presentation.tex
 ## nn_presentation.pdf: nn_presentation.Rnw
 
+Sources += tanh.R
+tanh.Rout: sigmoid.Rout tanh.R
+
 Ignore += *.rs.tex:
 nn_presentation.rs.tex:
 	$(CP) nn_presentation.tex $@
