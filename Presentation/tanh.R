@@ -26,7 +26,7 @@ df <- (data.frame(x = x)
 p2 <- (
   ggplot(df, aes(x = x, y = Value, group = Act_Func, color = Act_Func)
          )
-  + geom_line()
+  + geom_line(size = 2)
   + labs(color = "Activation Function"
          #, title = "NN Activation functions"
          , x = "x"
