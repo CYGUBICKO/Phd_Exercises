@@ -23,16 +23,17 @@ df <- (data.frame(x = x)
 	%>% gather(Act_Func, Value, c(Sigmoid, tscale))
 )
 
-print(
+p2 <- (
   ggplot(df, aes(x = x, y = Value, group = Act_Func, color = Act_Func)
          )
   + geom_line()
   + labs(color = "Activation Function"
-         , title = "NN Activation functions"
+         #, title = "NN Activation functions"
          , x = "x"
-         , y = "a(x)"
+         , y = NULL
          )
   + theme(legend.position = c(0.2, .9),
           plot.title = element_text(hjust = 0.5)
           )
 )
+

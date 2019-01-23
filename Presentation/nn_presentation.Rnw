@@ -10,67 +10,157 @@
 \usepackage{hyperref}
 \usepackage{float}
 
+\usetheme{CambridgeUS} %Good
+
 %\usepackage{enumerate}
 %\numberwithin{equation}{section}
 
 \title{Neural Networks}
-\author{Steve}
+\author{Steve Cygu}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 \frame{\titlepage}
 
-\begin{frame}[fragile]{}
-\begin{block}{}
-\pagestyle{empty}
+\frame{\tiny{\frametitle{OUTLINE}\tableofcontents}} 
 
-\def\layersep{3.7cm}
-
-\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
-    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
-    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
-    \tikzstyle{input neuron}=[neuron, fill=green!50];
-    \tikzstyle{output neuron}=[neuron, fill=red!50];
-    \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
-    \tikzstyle{annot} = [text width=4em, text centered]
-
-    % Draw the input layer nodes
-    \foreach \name / \y in {1,...,4}
-    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
-        \node[input neuron, pin=left:$X_\y$] (I-\name) at (0,-\y) {};
-
-    % Draw the hidden layer nodes
-    \foreach \name / \y in {1,...,5}
-        \path[yshift=0.5cm]
-            node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
-
-    % Draw the output layer node
-    \node[output neuron,pin={[pin edge={->}]right:Output ($\hat{y}$)}, right of=H-3] (O) {};
-
-    % Connect every node in the input layer with every node in the
-    % hidden layer.
-    \foreach \source in {1,...,4}
-        \foreach \dest in {1,...,5}
-            \path (I-\source) edge (H-\dest);
-
-    % Connect every node in the hidden layer with the output layer
-    \foreach \source in {1,...,5}
-        \path (H-\source) edge (O);
-
-    % Annotate the layers
-    \node[annot,above of=H-1, node distance=1cm] (hl) {Hidden layer \textcolor{red}{($H^{(1)}$)}};
-    \node[annot,left of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{(1)}$)}};
-    \node[annot,right of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{(2)}$)}};
-    \node[annot,left of=hl] {Input layer};
-    \node[annot,right of=hl] {Output layer \textcolor{red}{($H^{(2)}$)}};
-    \node[annot,below of=H-3] (hl2) {Activation \textcolor{red}{$a^{(1)}$}};
-    \node[annot,right of=hl2] {Activation \textcolor{red}{$a^{(2)}$}};
-\end{tikzpicture}
-% End of code
+\section{Introduction}
+\subsection{Why Machine Learning?}
+\begin{frame}
+\begin{block}{Can we write algorithm to correctly identify each of the objects?}
+\centering
+\includegraphics[scale=0.8]{deep_learning.png}
 \end{block}
 \end{frame}
 
+\subsection{Neural Networks and Human Brain}
+\begin{frame}
+\centering
+\includegraphics[scale=1.3]{brain_network.png}
+\end{frame}
+
+\section{Neural Networks}
+
+\subsection{Components}
 
 \begin{frame}
+\begin{block}{Layers}
+\begin{itemize}
+\item \textbf{Input nodes}\\
+No computation
+\item \textbf{Hidden nodes (Neurons)}\\
+Intermediate processing and computation and transfers (another hidden layer or output). 
+\item \textbf{Output nodes}\\
+Uses a function (not necessarily activation function) to map the input from other layers to desired output format.
+\begin{itemize}
+\item Sigmoid
+\item Softmax
+\end{itemize}
+\end{itemize}
+\end{block}
+\begin{block}{Synapse/Connections}
+\begin{itemize}
+\item Transfers the output of neuron $i$ to the input of neuron $j$.\\
+\item Each connection is assigned weight, $W_{ij}$
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Activation function}
+Introduces \textcolor{red}{nonlinearity} into the neuron output.
+
+\begin{itemize}
+\item Sigmoid (Logistic Activation Function)
+\begin{align*}
+a(z) = \frac{1}{1 + exp(-z)}
+\end{align*}
+
+\item Tanh (hyperbolic tangent Activation Function)
+\begin{align*}
+a(z) = tanh(z) = \frac{2}{1 + exp(-2z)} - 1 = 2 sigmoid(2z) - 1
+\end{align*}
+
+\item ReLU (Rectified Linear Unit Activation Function)
+\begin{align*}
+a(z) = max(0, z)
+\end{align*}
+\end{itemize}
+
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Sigmoid and Tanh Activation Functions}
+<<compare, echo=FALSE,include=TRUE, fig=TRUE, height=10, width=14>>=
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(cowplot)
+library(tidyverse)
+library(openxlsx)
+theme_set(theme_bw())
+
+set.seed(237)
+
+# Function
+source("sigmoid.R")
+source("feedforward.R")
+source("backprop.R")
+source("sigmoidPrime.R")
+source("backprop.R")
+source("trainMynnet.R")
+source("predictNnet.R")
+
+x <- seq(-3, 3, 0.1)
+df <- (data.frame(x = x
+                 , Sigmoid = sigmoid(x)
+                 , Tanh = 2*sigmoid(2*x) - 1
+                 )
+       %>% gather(Act_Func, Value, -x)
+)
+
+p1 <- (ggplot(df, aes(x = x, y = Value, group = Act_Func, color = Act_Func)
+       )
+      + geom_line()
+      + labs(color = "Activation Function"
+             #, title = "NN Activation functions"
+             , x = "x"
+             , y = "a(x)"
+             )
+      + theme(legend.position = c(0.2, .9),
+              plot.title = element_text(hjust = 0.5)
+              )
+)
+
+source("tanh.R")
+
+plot_grid(p1, p2, ncol = 2)
+@
+\end{frame}
+
+% \begin{frame}[fragile]{}
+% <<compare_tanh, echo=FALSE,include=TRUE, fig=TRUE, height=5>>=
+% source("tanh.R")
+% 
+% @
+% 
+% \end{frame}
+
+
+
+\subsection{Types of Neural Networks}
+
+
+\begin{frame}{Single-layer Perceptron}
+\begin{itemize}
+\item No hidden layer, a single neuron.
+\textcolor{blue}{
+\begin{align*}
+\hat{y} = b + \sum_{i=1}^n{x_iw_i}
+\end{align*}
+}
+\end{itemize}
+
 \begin{tikzpicture}[
 init/.style={
   draw,
@@ -100,7 +190,7 @@ start chain=2,node distance=13mm
 \begin{scope}[start chain=1]
 \node[on chain=1] at (0,1.5cm) 
   (x1) {$x_1$};
-\node[on chain=1,join=by o-latex] 
+\node[on chain=1,label=above:Weights,join=by o-latex] 
   (w1) {$w_1$};
 \end{scope}
 \begin{scope}[start chain=3]
@@ -112,7 +202,7 @@ start chain=2,node distance=13mm
 \begin{scope}[start chain=4]
 \node[on chain=4] at (0,-2.5cm) 
   (x4) {$x_4$};
-\node[on chain=4,label=below:Weights,join=by o-latex] 
+\node[on chain=4,join=by o-latex] 
   (w4) {$w_4$};
 \end{scope}
 \node[label=above:\parbox{2cm}{\centering Bias \\ $b$}] at (sigma|-w1) (b) {};
@@ -124,116 +214,114 @@ start chain=2,node distance=13mm
 
 \draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Inputs} (x4.south west);
 \end{tikzpicture}
-
 \end{frame}
 
 
-\begin{frame}{Components}
-\begin{itemize}
-\item \textbf{Layers} - Input, Hidden and Output
-\begin{itemize}
-\item \textbf{Neuron/Node/Unit} - Receives input and \textcolor{red}{computes} and output
-\end{itemize}
-\end{itemize}
 
-\begin{itemize}
-\item \textbf{Synapse} - Associated weights.
-\end{itemize}
 
+\begin{frame}[fragile]{Multi-layer perceptron (MLP)}
+%\begin{block}{}
+\pagestyle{empty}
+
+\def\layersep{3.7cm}
+
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=green!50];
+    \tikzstyle{output neuron}=[neuron, fill=red!50];
+    \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,4}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+        \node[input neuron, pin=left:$X_\y$] (I-\name) at (0,-\y) {};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,5}
+        \path[yshift=1cm]
+            node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
+
+    % Draw the output layer node
+    \node[output neuron,pin={[pin edge={->}]right:Output ($\hat{y}$)}, right of=H-3] (O) {};
+
+    % Connect every node in the input layer with every node in the
+    % hidden layer.
+    \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,5}
+            \path (I-\source) edge (H-\dest);
+
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,5}
+        \path (H-\source) edge (O);
+
+    % Annotate the layers
+    \node[annot,above of=H-1, node distance=1cm] (hl) {Hidden layer \textcolor{red}{($Z^{i}$)}};
+    \node[annot,left of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{i}$)}};
+    \node[annot,right of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{j}$)}};
+    \node[annot,left of=hl] {Input layer};
+    \node[annot,right of=hl] {Output layer \textcolor{red}{($Z^{j}$)}};
+    \node[annot,below of=H-2] (hl2) {Activation \textcolor{red}{$a(Z^i)$}};
+    \node[annot,right of=hl2] {Mapping \textcolor{red}{$a^*(Z^j)$}};
+\end{tikzpicture}
+% End of code
+%\end{block}
+\end{frame}
+
+\begin{frame}{Other types}
 \begin{itemize}
-\item \textbf{Activation function} - Introduces \textcolor{red}{nonlinearity} into the neuron output.
-\begin{itemize}
-\item Sigmoid (Logistic Activation Function)\\
-$a(x) = \frac{1}{1 + exp(-x)}$
-\item Tanh (hyperbolic tangent Activation Function) \\
-$a(x) = tanh(x) = \frac{2}{1 + exp(-2x)} - 1 = 2 sigmoid(2x) - 1$
-\item ReLU (Rectified Linear Unit Activation Function)
-$a(x) = max(0, x)$
+\item Convolutional Neural Network (CNN)
+\item Recurrent neural networks %https://towardsdatascience.com/a-gentle-introduction-to-neural-networks-series-part-1-2b90b87795bc
 \end{itemize}
+\end{frame}
+
+
+\section{Fitting Neural Networks}
+
+\begin{frame}
+
+Weights are the parameters. The generic approach is by \textbf{gradient descent}.
+\begin{itemize}
+\item Forward-propagation (feed-forward)
+\item Backward-propagation
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}[fragile]{}
-<<compare, echo=FALSE,include=FALSE>>=
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(tidyverse)
-library(openxlsx)
-theme_set(theme_bw())
-
-set.seed(237)
-
-# Function
-source("sigmoid.R")
-source("feedforward.R")
-source("backprop.R")
-source("sigmoidPrime.R")
-source("backprop.R")
-source("trainMynnet.R")
-source("predictNnet.R")
-
-x <- seq(-3, 3, 0.1)
-df <- (data.frame(x = x
-                 , Sigmoid = sigmoid(x)
-                 , Tanh = 2*sigmoid(2*x) - 1
-                 )
-       %>% gather(Act_Func, Value, -x)
-)
-
-print(
-  ggplot(df, aes(x = x, y = Value, group = Act_Func, color = Act_Func)
-         )
-  + geom_line()
-  + labs(color = "Activation Function"
-         , title = "NN Activation functions"
-         , x = "x"
-         , y = "a(x)"
-         )
-  + theme(legend.position = c(0.2, .9),
-          plot.title = element_text(hjust = 0.5)
-          )
-)
-
-@
-
-\includegraphics[scale=0.5]{figure/compare-1.pdf}
-
-\end{frame}
-
-
-\begin{frame}{Feed-forward}
+\subsection{Feed-forward}
+\begin{frame}
 
 Consider,
 \begin{itemize}
-\item[] $H^{(1)}_1 = X_1W^{(1)}_{1,1} + X_2W^{(1)}_{2,1} + X_3W^{(1)}_{3,1} + X_4W^{(1)}_{4,1}$
+\item[] $Z^{i}_1 = X_1W^{i}_{1,1} + X_2W^{i}_{2,1} + X_3W^{i}_{3,1} + X_4W^{i}_{4,1}$
 \pause
-\item[] $H^{(1)}_2 = X_1W^{(1)}_{1,2} + X_2W^{(1)}_{2,2} + X_3W^{(1)}_{3,2} + X_4W^{(1)}_{4,2}
+\item[] $Z^{i}_2 = X_1W^{i}_{1,2} + X_2W^{i}_{2,2} + X_3W^{i}_{3,2} + X_4W^{i}_{4,2}
 $
 \pause
 \item[]\textcolor{red}{$\vdots$}
 \end{itemize}
 
 \pause
-$H^{2}$ `component' is the \textcolor{blue}{sum of weighted inputs} to each neuron.
+$Z^{i}$ `component' is the \textcolor{blue}{sum of weighted inputs} to each neuron.
 \begin{align}
-H^{(1)} = XW^{(1)} \label{eqn1}
+Z^{i} = XW^{i} \label{eqn1}
 \end{align}
 
 \end{frame}
 
-\begin{frame}{Feed-forward}
+
+\begin{frame}
 
 Apply activation function to \autoref{eqn1}
 \begin{align}
-a^{(1)} = a(H^{(1)}) \label{eqn2}
+a^{i} = a(Z^{i}) \label{eqn2}
 \end{align}
 
 Propagate \ref{eqn2} to the output layer
 \begin{align}
-H^{(2)} = a^{(1)}W^{(2)}  \label{eqn3}\\
-\Longrightarrow \hat{y} =  a^{(2)}= a(H^{(2)}) \label{eqn4}
+Z^{j} = a^{i}W^{j}  \label{eqn3}\\
+\Longrightarrow \hat{y} =  a^{j}= a^*(Z^{j}) \label{eqn4}
 \end{align}
 \end{frame}
 % 
@@ -275,7 +363,8 @@ H^{(2)} = a^{(1)}W^{(2)}  \label{eqn3}\\
 % 
 % \end{frame}
 
-\begin{frame}{Back propagation}
+\subsection{Back propagation}
+\begin{frame}
 \begin{itemize}
 \item Estimate weights that ensures the model fits the training data well.
 \begin{align}
@@ -284,72 +373,98 @@ J = \sum{\frac{1}{2}(y - \hat{y})^2}
 \pause
 \item[] 
 \begin{align}
-J(W) = \frac{1}{2} \sum{\left(y - a(a(XW^{(1)})W^{(2)})\right)^2}
+J(W) = \frac{1}{2} \sum{\left(y - a(a(XW^{i})W^{j})\right)^2}
 \end{align}
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}[fragile]{Gradient descent}
+\subsection{Gradient descent}
+\begin{frame}[fragile]
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.2]{gradient_descent.png}
+\includegraphics[scale=0.8]{gradient_descent.png}
 \end{figure}
-\end{frame}
-
-\begin{frame}{Gradient descent}
-\begin{block}{}
+\pause
+\textcolor{blue}{
 \begin{align*}
 W_{t+1} = W_t - \gamma \Delta J(W_t)
 \end{align*}
-\end{block}
-Compute $\frac{\partial J}{\partial W^{(1)}}$ and $\frac{\partial J}{\partial W^{(2)}}$
+}
+\end{frame}
+
+\begin{frame}
+%\begin{block}{}
+%\end{block}
+Compute $\frac{\partial J}{\partial W^{i}}$ and $\frac{\partial J}{\partial W^{j}}$
 \begin{align*}
-\frac{\partial J}{\partial W^{(2)}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{(2)}} \\
-&= -(y - \hat{y})\textcolor{blue}{\frac{\partial \hat{y}}{\partial H^{(2)}} \frac{\partial H^{(2)}}{\partial W^{(2)}}} \\
-%% Additional notes
-%% Since $\hat{y} = a^{(2)}(H^{(2)}$
-&=  -(y - \hat{y})\textcolor{blue}{a'(H^{(2)})} \frac{\partial H^{(2)}}{\partial W^{(2)}} \\
-&=  -(y - \hat{y})\textcolor{blue}{a'(H^{(2)})} \frac{\partial H^{(2)}}{\partial W^{(2)}} \\
-%% H^{(2)} = a^{(1)}W^{(2)} \Longrightarrow frac{\partial H^{(2)}}{\partial W^{(2)}} = a^{(1)} and $a^{(2)}T$ takes care of the omitted summation
-\Longrightarrow \frac{\partial J}{\partial W^{(2)}} &=  -\textcolor{blue}{a^{(1)T}}(y - \hat{y})a'(H^{(2)})\\
+\frac{\partial J}{\partial W^{j}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{j}} \\
+% &= -(y - \hat{y})\textcolor{blue}{\frac{\partial \hat{y}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{j}}} \\
+% %% Additional notes
+% %% Since $\hat{y} = a^{j}(Z^{j}$
+% &=  -(y - \hat{y})\textcolor{blue}{a'(Z^{j})} \frac{\partial Z^{j}}{\partial W^{j}} \\
+% &=  -(y - \hat{y})\textcolor{blue}{a'(Z^{j})} \frac{\partial Z^{j}}{\partial W^{j}} \\
+% %% Z^{j} = a^{i}W^{j} \Longrightarrow frac{\partial Z^{j}}{\partial W^{j}} = a^{i} and $a^{j}T$ takes care of the omitted summation
+\Longrightarrow \frac{\partial J}{\partial W^{j}} &=  -\textcolor{blue}{a^{iT}}(y - \hat{y})a'(Z^{j})\\
 \end{align*}
 \end{frame}
 
-\begin{frame}{Gradient descent}
+\begin{frame}
 \begin{align*}
-\frac{\partial J}{\partial W^{(1)}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{(1)}} \\
-&= -(y - \hat{y})\frac{\partial \hat{y}}{\partial H^{(2)}} \frac{\partial H^{(2)}}{\partial W^{(1)}}\\
-&= -(y - \hat{y})a'(H^{(2)})  \frac{\partial H^{(2)}}{\partial W^{(1)}}\\
-&= -(y - \hat{y})a'(H^{(2)})  \color{blue}{\frac{\partial H^{(2)}}{\partial a^{(1)}} \frac{\partial a^{(1)}}{\partial W^{(1)}}}\\
-&= -(y - \hat{y})a'(H^{(2)}) \color{blue}{W^{(2)T}} \frac{\partial a^{(1)}}{\partial W^{(1)}}\\
-&= -(y - \hat{y})a'(H^{(2)})  W^{(2)T} \color{blue}{\frac{\partial a^{(2)}}{\partial H^{(2)}} \frac{\partial H^{(2)}}{\partial W^{(1)}}}\\
-\Longrightarrow \frac{\partial J}{\partial W^{(1)}} &= -X^T (y - \hat{y})a'(H^{(2)})  W^{(2)T} a'(H^{(1)})
+\frac{\partial J}{\partial W^{i}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{i}} \\
+% &= -(y - \hat{y})\frac{\partial \hat{y}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{i}}\\
+% &= -(y - \hat{y})a'(Z^{j})  \frac{\partial Z^{j}}{\partial W^{i}}\\
+% &= -(y - \hat{y})a'(Z^{j})  \color{blue}{\frac{\partial Z^{j}}{\partial a^{i}} \frac{\partial a^{i}}{\partial W^{i}}}\\
+% &= -(y - \hat{y})a'(Z^{j}) \color{blue}{W^{jT}} \frac{\partial a^{i}}{\partial W^{i}}\\
+% &= -(y - \hat{y})a'(Z^{j})  W^{jT} \color{blue}{\frac{\partial a^{j}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{i}}}\\
+\Longrightarrow \frac{\partial J}{\partial W^{i}} &= -X^T (y - \hat{y})a'(Z^{j})  W^{jT} a'(Z^{i})
 \end{align*}
-
 \end{frame}
 
-\begin{frame}{Remarks}
+\section{Some Issues in Training Neural Networks}
+\begin{frame}
 \begin{itemize}
 \item[1. ] Starting values
+\begin{itemize}
+\item Starting weights are random numbers near zero.
+\item However, near weights collapses NN into approximately linear model.
+\item Exactly zero weights leads to zero derivatives and perfect symmetry. 
+\item Large weights lead to poor results.
+\end{itemize}
+\pause
 \item[2. ] Overfitting and Stopping Criterion
 \begin{itemize}
 \item \textcolor{red}{Reduce training error} to some predetermined threshold $\longrightarrow$ \textcolor{red}{overffiting}.
-\item Regularization
+\item Regularization by \textit{weight decay} (analogous to ridge regression)
 \[
-J(W) = \sum{\frac{1}{2}(y - \hat{y})^2}/n + \frac{1}{2}\lambda\left(\sum{W_1} + \sum{W_2} \right)
+J(W) = \sum{\frac{1}{2}(y - \hat{y})^2}/n + \frac{1}{2}\lambda\left(\sum{W_1^2} + \sum{W_2^2} \right)
 \]
-$\lambda$ - Regularization hyper parameter
+$\lambda \geq 0$ - Is tuning parameter. Larger values of $\lambda$ shrinks weights toward zero.
+\item Cross-validation is used to estimate $\lambda$.
 \end{itemize}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Remarks}
+\begin{frame}
 \begin{itemize}
-\item[3. ] Convergence and Local Minima
+\item[3. ] Convergence at the Local Minima
 \includegraphics[scale=0.5]{unconvex.png}
 \end{itemize}
 \end{frame}
 
+\section{References}
+\begin{frame}
+\begin{thebibliography}{9}
+\setbeamertemplate{bibliography item}[text]
+\bibitem{esli2009}
+Trevor, H., Robert, T., \& JH, F. (2009). The elements of statistical learning: data mining, inference, and prediction.
+\textit{Springer series in statistics}. Second Edition
+\bibitem{mlmitchel}
+Tom M. Mitchell. (1997). Machine Learning
+\textit{McGraw-Hill International Editions}.
+\bibitem{others}
+Internet sources (2019).
+\end{thebibliography}
+\end{frame}
 
 \end{document}
