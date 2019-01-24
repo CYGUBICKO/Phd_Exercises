@@ -22,7 +22,7 @@
 \SweaveOpts{concordance=TRUE}
 \frame{\titlepage}
 
-\frame{\tiny{\frametitle{OUTLINE}\tableofcontents}} 
+\frame{\small{\frametitle{OUTLINE}\tableofcontents}} 
 
 \section{Introduction}
 \subsection{Why Machine Learning?}
@@ -41,6 +41,127 @@
 
 \section{Neural Networks}
 
+\subsection{Types of Neural Networks}
+
+\begin{frame}[fragile]{Multi-layer perceptron (MLP)}
+%\begin{block}{}
+\pagestyle{empty}
+
+\def\layersep{3.7cm}
+
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=green!50];
+    \tikzstyle{output neuron}=[neuron, fill=red!50];
+    \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,4}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+        \node[input neuron, pin=left:$X_\y$] (I-\name) at (0,-\y) {};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,5}
+        \path[yshift=1cm]
+            node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
+
+    % Draw the output layer node
+    \node[output neuron,pin={[pin edge={->}]right:Output ($\hat{y}$)}, right of=H-3] (O) {};
+
+    % Connect every node in the input layer with every node in the
+    % hidden layer.
+    \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,5}
+            \path (I-\source) edge (H-\dest);
+
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,5}
+        \path (H-\source) edge (O);
+
+    % Annotate the layers
+    \node[annot,above of=H-1, node distance=1cm] (hl) {Hidden layer \textcolor{red}{($Z^{i}$)}};
+    \node[annot,left of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{i}$)}};
+    \node[annot,right of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{j}$)}};
+    \node[annot,left of=hl] {Input layer};
+    \node[annot,right of=hl] {Output layer \textcolor{red}{($Z^{j}$)}};
+    \node[annot,below of=H-2] (hl2) {Activation \textcolor{red}{$a(Z^i)$}};
+    \node[annot,right of=hl2] {Mapping \textcolor{red}{$a^*(Z^j)$}};
+\end{tikzpicture}
+% End of code
+%\end{block}
+\end{frame}
+
+\begin{frame}%{{Types of Neural Networks}}
+\begin{block}{Single-layer Perceptron}
+\begin{itemize}
+\item No hidden layer, a single neuron.
+\begin{tikzpicture}[
+init/.style={
+  draw,
+  circle,
+  inner sep=2pt,
+  font=\Huge,
+  join = by -latex
+},
+squa/.style={
+  draw,
+  inner sep=2pt,
+  font=\Large,
+  join = by -latex
+},
+start chain=2,node distance=13mm
+]
+\node[on chain=2] 
+  (x2) {$x_2$};
+\node[on chain=2,join=by o-latex] 
+  {$w_2$};
+\node[on chain=2,init] (sigma) 
+  {$\displaystyle\Sigma$};
+\node[on chain=2,squa,label=above:{\parbox{2cm}{\centering Activation \\ function}}]   
+  {$f$};
+\node[on chain=2,label=above:Output,join=by -latex] 
+  {$\hat{y}$};
+\begin{scope}[start chain=1]
+\node[on chain=1] at (0,1cm) 
+  (x1) {$x_1$};
+\node[on chain=1,label=above:Weights,join=by o-latex] 
+  (w1) {$w_1$};
+\end{scope}
+\begin{scope}[start chain=3]
+\node[on chain=3] at (0,-1cm) 
+  (x3) {$x_3$};
+\node[on chain=3,join=by o-latex] 
+  (w3) {$w_3$};
+\end{scope}
+\begin{scope}[start chain=4]
+\node[on chain=4] at (0,-2cm) 
+  (x4) {$x_4$};
+\node[on chain=4,join=by o-latex] 
+  (w4) {$w_4$};
+\end{scope}
+\node[label=above:\parbox{2cm}{\centering Bias \\ $b$}] at (sigma|-w1) (b) {};
+
+\draw[-latex] (w1) -- (sigma);
+\draw[-latex] (w3) -- (sigma);
+\draw[-latex] (w4) -- (sigma);
+\draw[o-latex] (b) -- (sigma);
+
+\draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Inputs} (x4.south west);
+\end{tikzpicture}
+\end{itemize}
+
+\pause
+\textcolor{blue}{
+\begin{align*}
+\hat{y} = b + \sum_{i=1}^n{x_iw_i}
+\end{align*}
+}
+
+\end{block}
+\end{frame}
+
 \subsection{Components}
 
 \begin{frame}{Components}
@@ -49,7 +170,7 @@
 \item \textbf{Input nodes}\\
 No computation
 \item \textbf{Hidden nodes (Neurons)}\\
-Intermediate processing and computation and transfers (another hidden layer or output). 
+Intermediate processing, computation and transfers to another hidden layer or output. 
 \item \textbf{Output nodes}\\
 Uses a function (not necessarily activation function) to map the input from other layers to desired output format.
 \begin{itemize}
@@ -59,6 +180,8 @@ Uses a function (not necessarily activation function) to map the input from othe
 \end{itemize}
 \end{block}
 \end{frame}
+
+
 
 \begin{frame}
 \begin{block}{Synapse/Connections}
@@ -151,137 +274,12 @@ plot_grid(p1, p2, ncol = 2)
 
 
 
-\subsection{Types of Neural Networks}
-
-
-\begin{frame}{{Types of Neural Networks}}
-\begin{block}{Single-layer Perceptron}
-\begin{itemize}
-\item No hidden layer, a single neuron.
-\begin{tikzpicture}[
-init/.style={
-  draw,
-  circle,
-  inner sep=2pt,
-  font=\Huge,
-  join = by -latex
-},
-squa/.style={
-  draw,
-  inner sep=2pt,
-  font=\Large,
-  join = by -latex
-},
-start chain=2,node distance=13mm
-]
-\node[on chain=2] 
-  (x2) {$x_2$};
-\node[on chain=2,join=by o-latex] 
-  {$w_2$};
-\node[on chain=2,init] (sigma) 
-  {$\displaystyle\Sigma$};
-\node[on chain=2,squa,label=above:{\parbox{2cm}{\centering Activation \\ function}}]   
-  {$f$};
-\node[on chain=2,label=above:Output,join=by -latex] 
-  {$\hat{y}$};
-\begin{scope}[start chain=1]
-\node[on chain=1] at (0,1cm) 
-  (x1) {$x_1$};
-\node[on chain=1,label=above:Weights,join=by o-latex] 
-  (w1) {$w_1$};
-\end{scope}
-\begin{scope}[start chain=3]
-\node[on chain=3] at (0,-1cm) 
-  (x3) {$x_3$};
-\node[on chain=3,join=by o-latex] 
-  (w3) {$w_3$};
-\end{scope}
-\begin{scope}[start chain=4]
-\node[on chain=4] at (0,-2cm) 
-  (x4) {$x_4$};
-\node[on chain=4,join=by o-latex] 
-  (w4) {$w_4$};
-\end{scope}
-\node[label=above:\parbox{2cm}{\centering Bias \\ $b$}] at (sigma|-w1) (b) {};
-
-\draw[-latex] (w1) -- (sigma);
-\draw[-latex] (w3) -- (sigma);
-\draw[-latex] (w4) -- (sigma);
-\draw[o-latex] (b) -- (sigma);
-
-\draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Inputs} (x4.south west);
-\end{tikzpicture}
-\end{itemize}
-
-\pause
-\textcolor{blue}{
-\begin{align*}
-\hat{y} = b + \sum_{i=1}^n{x_iw_i}
-\end{align*}
-}
-
-\end{block}
-\end{frame}
-
-
-
-
-\begin{frame}[fragile]{Multi-layer perceptron (MLP)}
-%\begin{block}{}
-\pagestyle{empty}
-
-\def\layersep{3.7cm}
-
-\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep]
-    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
-    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=17pt,inner sep=0pt]
-    \tikzstyle{input neuron}=[neuron, fill=green!50];
-    \tikzstyle{output neuron}=[neuron, fill=red!50];
-    \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
-    \tikzstyle{annot} = [text width=4em, text centered]
-
-    % Draw the input layer nodes
-    \foreach \name / \y in {1,...,4}
-    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
-        \node[input neuron, pin=left:$X_\y$] (I-\name) at (0,-\y) {};
-
-    % Draw the hidden layer nodes
-    \foreach \name / \y in {1,...,5}
-        \path[yshift=1cm]
-            node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
-
-    % Draw the output layer node
-    \node[output neuron,pin={[pin edge={->}]right:Output ($\hat{y}$)}, right of=H-3] (O) {};
-
-    % Connect every node in the input layer with every node in the
-    % hidden layer.
-    \foreach \source in {1,...,4}
-        \foreach \dest in {1,...,5}
-            \path (I-\source) edge (H-\dest);
-
-    % Connect every node in the hidden layer with the output layer
-    \foreach \source in {1,...,5}
-        \path (H-\source) edge (O);
-
-    % Annotate the layers
-    \node[annot,above of=H-1, node distance=1cm] (hl) {Hidden layer \textcolor{red}{($Z^{i}$)}};
-    \node[annot,left of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{i}$)}};
-    \node[annot,right of=H-1, node distance=2cm] {Weights \textcolor{red}{($W^{j}$)}};
-    \node[annot,left of=hl] {Input layer};
-    \node[annot,right of=hl] {Output layer \textcolor{red}{($Z^{j}$)}};
-    \node[annot,below of=H-2] (hl2) {Activation \textcolor{red}{$a(Z^i)$}};
-    \node[annot,right of=hl2] {Mapping \textcolor{red}{$a^*(Z^j)$}};
-\end{tikzpicture}
-% End of code
-%\end{block}
-\end{frame}
-
-\begin{frame}{Other types}
-\begin{itemize}
-\item Convolutional Neural Network (CNN)
-\item Recurrent neural networks %https://towardsdatascience.com/a-gentle-introduction-to-neural-networks-series-part-1-2b90b87795bc
-\end{itemize}
-\end{frame}
+% \begin{frame}{Other types}
+% \begin{itemize}
+% \item Convolutional Neural Network (CNN)
+% \item Recurrent neural networks %https://towardsdatascience.com/a-gentle-introduction-to-neural-networks-series-part-1-2b90b87795bc
+% \end{itemize}
+% \end{frame}
 
 
 \section{Fitting Neural Networks}
@@ -298,8 +296,9 @@ Weights are the parameters. The generic approach is by \textbf{gradient descent}
 
 \subsection{Feed-forward}
 \begin{frame}{Feed-forward}
-
-Consider,
+\begin{itemize}
+\item Randomly assign starting weights and consider any $Z^i_k$ , $k = 1\cdots n$. Then,
+\pause
 \begin{itemize}
 \item[] $Z^{i}_1 = X_1W^{i}_{1,1} + X_2W^{i}_{2,1} + X_3W^{i}_{3,1} + X_4W^{i}_{4,1}$
 \pause
@@ -308,7 +307,7 @@ $
 \pause
 \item[]\textcolor{red}{$\vdots$}
 \end{itemize}
-
+\end{itemize}
 \pause
 $Z^{i}$ `component' is the \textcolor{blue}{sum of weighted inputs} to each neuron.
 \begin{align}
@@ -373,60 +372,64 @@ Z^{j} = a^{i}W^{j}  \label{eqn3}\\
 \subsection{Back propagation}
 \begin{frame}{Back propagation}
 \begin{itemize}
-\item Estimate weights that ensures the model fits the training data well.
+\item Aim is to estimate weights that ensures the model fits the training data well.
+\item Calculate the error at the output nodes and propagate them back to the network.
 \begin{align}
 J = \sum{\frac{1}{2}(y - \hat{y})^2}
 \end{align}
 \pause
-\item[] 
 \begin{align}
-J(W) = \frac{1}{2} \sum{\left(y - a(a(XW^{i})W^{j})\right)^2}
+J(W) = \frac{1}{2} \sum{\left(y - a^*(a(XW^{i})W^{j})\right)^2}
 \end{align}
+\pause
+\item Compute the gradient; $\frac{\partial J}{\partial W^{i}}$ and $\frac{\partial J}{\partial W^{j}}$
+\pause
+\item Adjust the weights using optimization method such as \textbf{Gradient Descent}.
 \end{itemize}
 
 \end{frame}
 
 \subsection{Gradient descent}
 \begin{frame}[fragile]{Gradient descent}
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.8]{gradient_descent.png}
-\end{figure}
-\pause
 \textcolor{blue}{
 \begin{align*}
 W_{t+1} = W_t - \gamma \Delta J(W_t)
 \end{align*}
 }
+\pause
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{gradient_descent.png}
+\end{figure}
 \end{frame}
 
-\begin{frame}{Gradient descent}
-%\begin{block}{}
-%\end{block}
-Compute $\frac{\partial J}{\partial W^{i}}$ and $\frac{\partial J}{\partial W^{j}}$
-\begin{align*}
-\frac{\partial J}{\partial W^{j}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{j}} \\
-% &= -(y - \hat{y})\textcolor{blue}{\frac{\partial \hat{y}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{j}}} \\
-% %% Additional notes
-% %% Since $\hat{y} = a^{j}(Z^{j}$
-% &=  -(y - \hat{y})\textcolor{blue}{a'(Z^{j})} \frac{\partial Z^{j}}{\partial W^{j}} \\
-% &=  -(y - \hat{y})\textcolor{blue}{a'(Z^{j})} \frac{\partial Z^{j}}{\partial W^{j}} \\
-% %% Z^{j} = a^{i}W^{j} \Longrightarrow frac{\partial Z^{j}}{\partial W^{j}} = a^{i} and $a^{j}T$ takes care of the omitted summation
-\Longrightarrow \frac{\partial J}{\partial W^{j}} &=  -\textcolor{blue}{a^{iT}}(y - \hat{y})a'(Z^{j})\\
-\end{align*}
-\end{frame}
+% \begin{frame}{Gradient descent}
+% %\begin{block}{}
+% %\end{block}
+% Compute $\frac{\partial J}{\partial W^{i}}$ and $\frac{\partial J}{\partial W^{j}}$
+% \begin{align*}
+% \frac{\partial J}{\partial W^{j}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{j}} \\
+% % &= -(y - \hat{y})\textcolor{blue}{\frac{\partial \hat{y}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{j}}} \\
+% % %% Additional notes
+% % %% Since $\hat{y} = a^{j}(Z^{j}$
+% % &=  -(y - \hat{y})\textcolor{blue}{a'(Z^{j})} \frac{\partial Z^{j}}{\partial W^{j}} \\
+% % &=  -(y - \hat{y})\textcolor{blue}{a'(Z^{j})} \frac{\partial Z^{j}}{\partial W^{j}} \\
+% % %% Z^{j} = a^{i}W^{j} \Longrightarrow frac{\partial Z^{j}}{\partial W^{j}} = a^{i} and $a^{j}T$ takes care of the omitted summation
+% \Longrightarrow \frac{\partial J}{\partial W^{j}} &=  -\textcolor{blue}{a^{iT}}(y - \hat{y})a'(Z^{j})\\
+% \end{align*}
+% \end{frame}
 
-\begin{frame}
-\begin{align*}
-\frac{\partial J}{\partial W^{i}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{i}} \\
-% &= -(y - \hat{y})\frac{\partial \hat{y}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{i}}\\
-% &= -(y - \hat{y})a'(Z^{j})  \frac{\partial Z^{j}}{\partial W^{i}}\\
-% &= -(y - \hat{y})a'(Z^{j})  \color{blue}{\frac{\partial Z^{j}}{\partial a^{i}} \frac{\partial a^{i}}{\partial W^{i}}}\\
-% &= -(y - \hat{y})a'(Z^{j}) \color{blue}{W^{jT}} \frac{\partial a^{i}}{\partial W^{i}}\\
-% &= -(y - \hat{y})a'(Z^{j})  W^{jT} \color{blue}{\frac{\partial a^{j}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{i}}}\\
-\Longrightarrow \frac{\partial J}{\partial W^{i}} &= -X^T (y - \hat{y})a'(Z^{j})  W^{jT} a'(Z^{i})
-\end{align*}
-\end{frame}
+% \begin{frame}
+% \begin{align*}
+% \frac{\partial J}{\partial W^{i}} &\textcolor{red}{\approx} -(y - \hat{y})\frac{\partial \hat{y}}{\partial W^{i}} \\
+% % &= -(y - \hat{y})\frac{\partial \hat{y}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{i}}\\
+% % &= -(y - \hat{y})a'(Z^{j})  \frac{\partial Z^{j}}{\partial W^{i}}\\
+% % &= -(y - \hat{y})a'(Z^{j})  \color{blue}{\frac{\partial Z^{j}}{\partial a^{i}} \frac{\partial a^{i}}{\partial W^{i}}}\\
+% % &= -(y - \hat{y})a'(Z^{j}) \color{blue}{W^{jT}} \frac{\partial a^{i}}{\partial W^{i}}\\
+% % &= -(y - \hat{y})a'(Z^{j})  W^{jT} \color{blue}{\frac{\partial a^{j}}{\partial Z^{j}} \frac{\partial Z^{j}}{\partial W^{i}}}\\
+% \Longrightarrow \frac{\partial J}{\partial W^{i}} &= -X^T (y - \hat{y})a'(Z^{j})  W^{jT} a'(Z^{i})
+% \end{align*}
+% \end{frame}
 
 \section{Some Issues in Training Neural Networks}
 \begin{frame}{Some Issues in Training Neural Networks}
@@ -434,14 +437,14 @@ Compute $\frac{\partial J}{\partial W^{i}}$ and $\frac{\partial J}{\partial W^{j
 \item[1. ] Starting values
 \begin{itemize}
 \item Starting weights are random numbers near zero.
-\item However, near weights collapses NN into approximately linear model.
+\item However, near zero weights collapses NN into approximately linear model.
 \item Exactly zero weights leads to zero derivatives and perfect symmetry. 
 \item Large weights lead to poor results.
 \end{itemize}
 \pause
 \item[2. ] Overfitting and Stopping Criterion
 \begin{itemize}
-\item \textcolor{red}{Reduce training error} to some predetermined threshold $\longrightarrow$ \textcolor{red}{overffiting}.
+\item \textcolor{red}{Reduce training error} to some predetermined threshold $\longrightarrow$ \textcolor{red}{overfitting}.
 \item Regularization by \textit{weight decay} (analogous to ridge regression)
 \[
 J(W) = \sum{\frac{1}{2}(y - \hat{y})^2}/n + \frac{1}{2}\lambda\left(\sum{W_1^2} + \sum{W_2^2} \right)
