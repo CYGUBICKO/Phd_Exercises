@@ -9,6 +9,8 @@
 \usepackage{verbatim}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{pdfpages}
+\usepackage{caption}
 
 %\usetheme{CambridgeUS} %Good
 
@@ -120,7 +122,7 @@ start chain=2,node distance=13mm
 \node[on chain=2,init] (sigma) 
   {$\displaystyle\Sigma$};
 \node[on chain=2,squa,label=above:{\parbox{2cm}{\centering Activation \\ function}}]   
-  {$f$};
+  {$a$};
 \node[on chain=2,label=above:Output,join=by -latex] 
   {$\hat{y}$};
 \begin{scope}[start chain=1]
@@ -217,6 +219,7 @@ a(z) = max(0, z)
 \end{frame}
 
 \begin{frame}[fragile]{Sigmoid and Tanh Activation Functions}
+\centering
 <<compare, echo=FALSE,include=TRUE, fig=TRUE, height=10, width=14>>=
 library(ggplot2)
 library(dplyr)
@@ -445,11 +448,11 @@ W_{t+1} = W_t - \gamma \Delta J(W_t)
 \item[2. ] Overfitting and Stopping Criterion
 \begin{itemize}
 \item \textcolor{red}{Reduce training error} to some predetermined threshold $\longrightarrow$ \textcolor{red}{overfitting}.
-\item Regularization by \textit{weight decay} (analogous to ridge regression)
-\[
-J(W) = \sum{\frac{1}{2}(y - \hat{y})^2}/n + \frac{1}{2}\lambda\left(\sum{W_1^2} + \sum{W_2^2} \right)
-\]
-$\lambda \geq 0$ - Is tuning parameter. Larger values of $\lambda$ shrinks weights toward zero.
+\item Regularization by \textit{weight decay} (analogous to ridge regression),
+% \[
+% J(W) = \sum{\frac{1}{2}(y - \hat{y})^2}/n + \frac{1}{2}\lambda\left(\sum{W_1^2} + \sum{W_2^2} \right)
+% \]
+$\lambda \geq 0$. Larger values of $\lambda$ shrinks weights toward zero.
 \item Cross-validation is used to estimate $\lambda$.
 \end{itemize}
 \end{itemize}
@@ -461,6 +464,106 @@ $\lambda \geq 0$ - Is tuning parameter. Larger values of $\lambda$ shrinks weigh
 \includegraphics[scale=0.5]{unconvex.png}
 \end{itemize}
 \end{frame}
+
+\section{Example}
+\begin{frame}{Example}
+\begin{itemize}
+\item \href{https://archive.ics.uci.eduml/datasets/breast+cancer+wisconsin+(original}{Breast Cancer Wisconsin Data Set}
+\pause
+\item The data set contains $569$ cases with $31$ variables. The diagnosis classification is either (M = Malignant) or (B = Benign).
+
+\pause
+\includegraphics[scale=0.6]{nn_lab_presentation-figure/unnamed-chunk-1-1.png}
+\end{itemize}
+
+
+
+\end{frame}
+
+\subsection{Methods}
+\begin{frame}{Methods}
+\begin{itemize}
+\item Data partitioning: $80\%$ training set and $20\%$ test set
+\item Automatic grid search, with a $tunelength = 10$ was used to find optimal parameter values
+\begin{itemize}
+\pause
+\item Weight decay
+\pause
+\item Number of hidden neurons
+\end{itemize}
+\pause
+\item 10-fold cross validation
+\item ROC was used as the performance metric
+\end{itemize}
+\end{frame}
+
+\subsection{results}
+
+
+\begin{frame}[fragile]{results : Weight decay and hidden neurons}
+\centering
+\begin{columns}[t]
+\column{.7\textwidth}
+<<nnet_result, echo=FALSE,include=TRUE, fig=TRUE>>=
+load("../.pruning_plots.RData")
+
+figures$nnet_fit
+@
+
+\column{.3\textwidth}
+
+\pause
+<<echo=FALSE>>=
+print(best_tune$nnet_fit)
+@
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Result: Resampling distribution}
+<<roc_density, echo=FALSE,include=TRUE, fig=TRUE>>=
+roc_density$nnet_fit
+@
+
+\end{frame}
+
+
+\begin{frame}{Result: Predictions}
+\centering
+\begin{columns}[t]
+\column{.5\textwidth}
+<<obs_pred_plot, echo=FALSE,include=TRUE, fig=TRUE>>=
+load("../.model_predictions.RData")
+auc <- auc_vals$nne_fit
+obs_pred_plot
+@
+\pause
+<<prob_pred_plot2, echo=FALSE,include=TRUE, fig=TRUE>>=
+prob_pred_plot2
+@
+\column{.5\textwidth}
+<<prob_pred_plot1, echo=FALSE,include=TRUE, fig=TRUE>>=
+prob_pred_plot1
+@
+%\captionof{figure}{Probaility of corrrect prediction}
+\pause
+<<roc, echo=FALSE,include=TRUE, fig=TRUE>>=
+
+roc_plot
+@
+%\captionof{figure}{ROC}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Conclusions}
+\begin{itemize}
+\item Discussed Gradient descent in neural network
+\item Appled neural network to classify breast cancer. The model provides a good classification of the data, with ROC of $0.99$.
+
+\end{itemize}
+\end{frame}
+
 
 \section{References}
 \begin{frame}{References}
@@ -476,5 +579,6 @@ Tom M. Mitchell. (1997). Machine Learning
 Internet sources (2019).
 \end{thebibliography}
 \end{frame}
+
 
 \end{document}

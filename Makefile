@@ -86,6 +86,9 @@ model_predictions.Rout: model_fits.Rout model_predictions.R
 ## ROC-AUC Confidence Intervals
 auc_ci.Rout: model_predictions.Rout auc_ci.R
 
+## Fit model for nnet only. Output for the presentation
+
+nnet_presentation.Rout:
 
 ######################################################################
 

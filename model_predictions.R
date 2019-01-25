@@ -10,6 +10,7 @@ theme_set(theme_bw())
 obs_pred_df <- list()
 prob_pred_df <- list()
 roc_df <- list()
+auc_vals <- list()
 for (i in 1:length(fitted_models)){
 	set.seed(237)
 	# Predicted class
@@ -45,6 +46,9 @@ for (i in 1:length(fitted_models)){
 		, x = model_roc@x.values[[1]]
 		, y = model_roc@y.values[[1]]
 	)
+	auc_vals[[names(fitted_models)[i]]] <- performance(rocr_pred
+		, "auc" 
+	)@y.values[[1]]
 }
 
 # Format data outputs
@@ -61,7 +65,7 @@ obs_count <-(test_df
 	%>% tally()
 )
 ## Plot
-print(
+obs_pred_plot <- (
 	obs_pred_df 
 		%>% filter(Observation=="pred")
 		%>% ggplot(aes(x = model, fill = Diagnosis)) 
@@ -75,7 +79,7 @@ print(
 				, x = "Model"
 				)
 )
-
+obs_pred_plot
 
 ## Predicted probabilities
 prob_pred_df1 <- prob_pred_df
@@ -86,7 +90,7 @@ prob_pred_df <- (Reduce(rbind, prob_pred_df1)
 	%>% filter(pred_diag=="M")
 )
 
-print(
+prob_pred_plot1 <- (
 	ggplot(prob_pred_df, aes(x = reorder(obs_diag, -prob), y = prob)
 	)
 	+ geom_boxplot(varwidth = TRUE, fill = "plum")
@@ -96,8 +100,9 @@ print(
 		, fill = "Predicted probability"
 		)
 )
+prob_pred_plot1 
 
-print(
+prob_pred_plot2 <- (
 	ggplot(prob_pred_df)
 	+ geom_density(aes(x = prob, y = ..scaled.., fill = factor(obs_diag))
 		, alpha = 0.8
@@ -109,47 +114,51 @@ print(
 		, fill = "Observed Diagnosis"
 	)
 )
+prob_pred_plot2
 
-# AUC curves
-
+## AUC curves
+#
 col_scheme <- sample(colours(), length(models))
-
-model_resamples <- resamples(fitted_models)
-resample_df <- model_resamples$values
-
-old_names <- grep("Res|ROC", names(resample_df), value = TRUE)
-new_names <- gsub("~ROC|_fit", "", old_names)
-auc_df <- (resample_df
-	%>% select(old_names)
-	%>% setNames(new_names)
-	%>% gather(Model, AUC, -Resample)
-)
-
-print(
-	ggplot(auc_df
-		, aes(x = reorder(Model, -AUC), y = AUC, colour = Model)
-		)
-		+ geom_boxplot()
-		+ scale_colour_manual(values = col_scheme)
-		+ labs(title = "AUC comparison"
-			, x = "Model"
-			, y = "AUC"
-		)
-)
+#
+#model_resamples <- resamples(fitted_models)
+#resample_df <- model_resamples$values
+#
+#old_names <- grep("Res|ROC", names(resample_df), value = TRUE)
+#new_names <- gsub("~ROC|_fit", "", old_names)
+#auc_df <- (resample_df
+#	%>% select(old_names)
+#	%>% setNames(new_names)
+#	%>% gather(Model, AUC, -Resample)
+#)
+#
+#print(
+#	ggplot(auc_df
+#		, aes(x = reorder(Model, -AUC), y = AUC, colour = Model)
+#		)
+#		+ geom_boxplot()
+#		+ scale_colour_manual(values = col_scheme)
+#		+ labs(title = "AUC comparison"
+#			, x = "Model"
+#			, y = "AUC"
+#		)
+#)
+#
 
 # ROC curves
 roc_df <- Reduce(rbind, roc_df)
 
-print(
+roc_plot <- (
 	ggplot(roc_df, aes(x = x, y = y, group = model, colour = model))
-	+ geom_line()
-	+ scale_x_continuous(limits = c(0, 0.2))
-	+ scale_colour_manual(values = col_scheme)
-	+ scale_y_continuous(limits = c(0.8, 1))
+	+ geom_line(size = 1)
+	+ scale_x_continuous(limits = c(0, 1))
+	#+ scale_colour_manual(values = col_scheme)
+	+ scale_y_continuous(limits = c(0, 1))
 	+ labs(title = "ROCs comparison"
 		, x = "False positive rate"
 		, y = "True positive rate"
 		)
 )
+roc_plot
 
-
+# AUC values
+auc_vals

@@ -105,7 +105,7 @@ layersFunc <- function(n){
 }
 
 ## Layers input of the function is the number of hidden layers
-n <- 4
+n <-1 
 layers <- layersFunc(n)
 nn_resultN <- nnFunc(layers) 
 
