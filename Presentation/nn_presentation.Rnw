@@ -19,6 +19,7 @@
 
 \title{Neural Networks}
 \author{Steve Cygu}
+\date{January 25, 2019}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
@@ -152,14 +153,15 @@ start chain=2,node distance=13mm
 
 \draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Inputs} (x4.south west);
 \end{tikzpicture}
-\end{itemize}
-
+\pause
+\item Training examples must be nearly seperable.
 \pause
 \textcolor{blue}{
 \begin{align*}
 \hat{y} = b + \sum_{i=1}^n{x_iw_i}
 \end{align*}
 }
+\end{itemize}
 
 \end{block}
 \end{frame}
