@@ -8,4 +8,5 @@ model_control <- trainControl(
 	, number = ctl_number
 	, classProbs = ctl_classProb
 	, summaryFunction = match.fun(summFunc)
+	, allowParallel = TRUE
 )

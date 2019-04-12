@@ -4,7 +4,8 @@ library(tidyr)
 library(ggplot2)
 library(dplyr)
 library(ROCR)
-theme_set(theme_bw())
+theme_set(theme_bw() + 
+	theme(panel.spacing=grid::unit(0,"lines")))
 
 # Predictions
 obs_pred_df <- list()
@@ -116,43 +117,44 @@ prob_pred_plot2 <- (
 )
 prob_pred_plot2
 
-## AUC curves
-#
+# AUC curves
+
 col_scheme <- sample(colours(), length(models))
-#
-#model_resamples <- resamples(fitted_models)
-#resample_df <- model_resamples$values
-#
-#old_names <- grep("Res|ROC", names(resample_df), value = TRUE)
-#new_names <- gsub("~ROC|_fit", "", old_names)
-#auc_df <- (resample_df
-#	%>% select(old_names)
-#	%>% setNames(new_names)
-#	%>% gather(Model, AUC, -Resample)
-#)
-#
-#print(
-#	ggplot(auc_df
-#		, aes(x = reorder(Model, -AUC), y = AUC, colour = Model)
-#		)
-#		+ geom_boxplot()
+
+model_resamples <- resamples(fitted_models)
+resample_df <- model_resamples$values
+
+old_names <- grep("Res|ROC", names(resample_df), value = TRUE)
+new_names <- gsub("~ROC|_fit", "", old_names)
+auc_df <- (resample_df
+	%>% select(old_names)
+	%>% setNames(new_names)
+	%>% gather(Model, AUC, -Resample)
+)
+
+print(
+	ggplot(auc_df
+		, aes(x = reorder(Model, -AUC), y = AUC, colour = Model)
+		)
+		+ geom_boxplot(outlier.colour=NULL)
 #		+ scale_colour_manual(values = col_scheme)
-#		+ labs(title = "AUC comparison"
-#			, x = "Model"
-#			, y = "AUC"
-#		)
-#)
-#
+		+ scale_colour_brewer(palette="Dark2")
+		+ labs(title = "AUC comparison"
+			, x = "Model"
+			, y = "AUC"
+		)
+)
+
 
 # ROC curves
 roc_df <- Reduce(rbind, roc_df)
 
 roc_plot <- (
 	ggplot(roc_df, aes(x = x, y = y, group = model, colour = model))
-	+ geom_line(size = 1)
+	+ geom_line()
 	+ scale_x_continuous(limits = c(0, 1))
-	#+ scale_colour_manual(values = col_scheme)
 	+ scale_y_continuous(limits = c(0, 1))
+	+ scale_colour_brewer(palette="Dark2")
 	+ labs(title = "ROCs comparison"
 		, x = "False positive rate"
 		, y = "True positive rate"

@@ -2,11 +2,11 @@
 # which might need to be changed in the course of our analysis
 
 # Data partitioning
-part_ratio <- 0.8 # Train : test ratio
+part_ratio <- 0.75 # Train : test ratio
 lst <- FALSE # Whether/not to return a list (TRUE) or a data matrix
 set.seed(237)
 
-# Ttrain control (training_control.R). See ?trainControl
+# Train control (training_control.R). See ?trainControl
 ctl_method <- "cv"
 ctl_number <- 10
 ctl_classProb <- TRUE 

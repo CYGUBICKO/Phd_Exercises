@@ -2,15 +2,16 @@ library(caret)
 set.seed(237)
 
 # List the models to fit
-models <- c(
-#	"rpart" 
-#	, "knn"
+models <- c("lda"
+	, "qda"
+	, "glm"
+	, "rpart"
+	, "bag"
+	, "ranger"
+	, "gbm"
+	, "knn"
 #	, "nb" 
-#	, "ranger"
-	 "nnet"
-#	, "lda"
-#	, "qda"
-#	, "glm"
+	, "nnet"
 )
 
 fitted_models <- model_train_fit(models)
