@@ -2,15 +2,15 @@ library(caret)
 
 model_train_fit <- function(train_methods){
 	fit_result <- list()
-	for (train_method in train_methods){
+	for (m in 1:length(train_methods)){
 	set.seed(237)
-		fit_name <- paste(train_method, "_", "fit", sep = "")
+		fit_name <- paste(names(train_methods)[[m]], "_", "fit", sep = "")
 		tryCatch(
-			if (train_method=="nnet"){
+			if (train_methods[[m]]=="nnet"){
 				fit_result[[fit_name]] <- train(
 					diagnosis ~ .
 						, data = train_df
-						, method = train_method
+						, method = train_methods[[m]]
 						, metric = train_metric
 						, preProc = train_preProc
 						, tuneLength = train_tuneLength
@@ -23,7 +23,7 @@ model_train_fit <- function(train_methods){
 				fit_result[[fit_name]] <- train(
 					diagnosis ~ .
 						, data = train_df
-						, method = train_method
+						, method = train_methods[[m]]
 						, metric = train_metric
 						, preProc = train_preProc
 						, tuneLength = train_tuneLength

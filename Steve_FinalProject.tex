@@ -1,0 +1,280 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University Assignment Title Page 
+% LaTeX Template
+% Version 1.0 (27/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+% Instructions for using this template:
+% This title page is capable of being compiled as is. This is not useful for 
+% including it in another document. To do this, you have two options: 
+%
+% 1) Copy/paste everything between \begin{document} and \end{document} 
+% starting at \begin{titlepage} and paste this into another LaTeX file where you 
+% want your title page.
+% OR
+% 2) Remove everything outside the \begin{titlepage} and \end{titlepage} and 
+% move this file to the same directory as the LaTeX file you wish to add it to. 
+% Then add \input{./title_page_1.tex} to your LaTeX file where you want your
+% title page.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\title{Title page with logo}
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[a4paper, 12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\usepackage{amssymb}
+
+\usepackage[urlcolor=blue]{hyperref}
+\usepackage{float} % provides H as float placement specifier
+\usepackage{subcaption}
+
+\renewcommand{\baselinestretch}{1}
+\usepackage{float,amsthm,amssymb,amsfonts,cite,setspace}
+\usepackage{cite}
+\usepackage[numbers]{natbib}
+
+% Also achieved with the enumerate package
+\usepackage{enumerate}
+\numberwithin{equation}{subsubsection}
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+
+\begin{document}
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE McMaster University}\\[1.5cm] % Name of your university/college
+\textsc{\Large CSE 780, Winter Final Project}\\[0.5cm] % Major heading such as course name
+%\textsc{\large }\\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \Huge \bfseries Predicting Species of Anuran (frogs) using Classification and Clustering Machine Learning Algorithms}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Steve \textsc{Cygu}\\
+400164479 % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Instructor:} \\
+Prof. Sharon \textsc{McNicholas} % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[2cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[2cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics{logo.jpg}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\linespread{1.25}
+
+
+%\begin{abstract}
+%Your abstract.
+%\end{abstract}
+
+
+\section{Introduction}
+
+\noindent
+Machine learning (ML) techniques allows computers to `learn' and discern patterns from large, noisy or complex datasets. This capability makes ML approaches best-suited to cancer prognosis and prediction. Application of various ML methods in development of cancer predictive models have resulted into improved understanding of cancer patients and better decision making. Clinical management of cancer patients can be improved by early diagnosis and prognosis, resulting to improvements in cancer research. One of the problems which has led to emergence of applications of ML methods in cancer research is the need to classify cancer patients into low and high risk groups \citep{kourou2015machine}.\\
+
+\noindent Breast cancer is one of the leading causes of death in women. In the US, at least $1$ in $8$ women are at risk of developing invasive breast cancer over the cause of their lifetime. It is expected that $268,600$ cases of cancer will be diagnosed in US women by the end of $2019$, of which $62,930$ are expected to be breast cancer and about $41,760$ cases may result to death \citep{uscancer2019}. However, there has been an overall decline in cancer incidence and cancer related deaths since $2000$. This can be attributed to advancement in cancer research especially: early screening and diagnosis, improved treatment methods and awareness campaigns \citep{asri2016using}. Breast cancer occurs when there is an abnormal growth of cells in the breast tissue. This may result into \textit{tumor growth}, which can either be \textit{cancerous} or \textit{non-cancerous}. \textit{Malignant} tumors are cancerous and attack other cells by growing into or spreading to the nearby tissues. Other other hand, \textit{benign} tumors are non-cancerous which are nolonger capable of growing or behaving normally. Other types of breast cancer are \textit{in situ}: \textit{ductal carcinoma} and \textit{lobular carcinoma}.\\
+
+\noindent Many ML algorithms have been used to classify breast cancer, specifically Wisconsin (Diagnostic) Breast Cancer Dataset (WDBC). \citeauthor{chaurasia2017data} applied and compared Naive Bayes, SVM-RBF kernel, Neural Network, Decision Tree and CART algorithms on WDBC orginal dataset to evaluate the best performer. The best model, SVM-RBF kernel, had the highest accuracy of $96.84\%$. \citeauthor{djebbari2008ensemble} used ensemble ML techniques to predict the survival time in breast cancer. Their methods showed improved performance as compared to earlier methods \citep{asri2016using}. \citeauthor{aruna2011knowledge} compared the performance of C4.5, Naive Bayes, SVM and KNN on WDBC. Their best model had an accuracy of $96.99\%$. On the other hand, \citeauthor{asri2016using} compared the same models and achieved an accuracy of $97.13\%$ with SVM as the best model \citep{asri2016using}.\\
+
+
+\noindent This analysis uses  Wisconsin Breast Cancer (Diagnostic) Dataset downloaded from \href{https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)}{UCI Machine Learning Repository} with features computed from a digitized image of a fine needle aspirate (FNA) created from fluid samples obtained from cancer patients with solid breast masss \citep{ucidata}. This was done through curve fitting algorithm which calculates the mean value, extreme value and standard error of each of the feature for the image. The main aim of the analysis apply Neural Networks, Classification trees, Bagging, Boosting, Random Forest, $k-$Nearest Neighbours, Naive Bayes, Linear and Quadratic Discriminant Analysis ML algorithms on WDBC to classify cancer diagnosis (as either Malignant or Benign) based on $31$ derived features describing the characteristics of cell nuclei. The aim is to evaluate the performance of these algorithms  based on AUC and ROC.
+
+\clearpage
+\section{Methods}
+
+\subsection{Models}
+In this section, models investigated in this analysis are described:
+
+\subsubsection{Classification Trees (CT)}
+
+Classification (decision) tree involves partitioning the data (predictors) repeatedly into multiple sub-regions so that the observations in each of the final sub-regions are as homogeneous as possible. To predict a particular observation, it is assigned to the most commonly occurring class of the observation in the sub-region where it belongs. 
+
+\noindent Let $\hat{p}_{mk}$ be the proportion of training observations of class $k$ in the $m$th sub-region, the measures of node purity (number of unique classes at the node) are \textit{Gini index} and the \textit{entropy}, which are defined as $G = \sum_{k=1}^K\hat{p}_{mk}(1-\hat{p}_{mk})$ and $D = \sum_{k=1}^K\hat{p}_{mk}\log \hat{p}_{mk}$, respectively. The Gini index and the entropy varies from 0 (highest purity) to 1 (highest degree of impurity). 
+
+\noindent To avoid overfitting and growing unnecessarily large trees, classification trees are \textit{pruned}. This involves avoiding splitting a partition if it does not significantly improve the model quality. A \textit{complexity parameter} \textit{cp} to penalize the tree for  unnecessarily many splits can be used. A high value of \textit{cp} leads to small tree while a small value of \textit{cp} leads to overfitting (large tree). $10$-fold cross-validation was used to choose the optimal value of \textit{cp}. 
+
+\subsubsection{Bagging}
+
+Consider $\hat{f}^1, \hat{f}^2, \cdots, \hat{f}^B$ predictions of $B$ training sets, bagging (bootstrap aggregation) averages $\hat{f}^*(x)$ to obtain a low variance model defined as
+\[
+\hat{f}_{\text{avg}}(x) = \frac{1}{B}\sum^{B}_{b=1}{\hat{f}^{(b)}(x)}
+\]
+However, in practice, $B$ different bootstrap samples are generated from the training dataset, from which $\hat{f}^{*b}(x)$ are computed and then averaged to obtain the prediction 
+\[
+\hat{f}_{\text{bag}}(x) = \frac{1}{B}\sum^{B}_{b=1}{\hat{f}^{*b}(x)}
+\]
+In classification setting, the prediction from each of the $B$ trees are recorded and then the overall prediction is the most commonly occurring class, $k$, of the $B$th tree. This is called \textit{majority vote}. The aim is to minimize the \textit{Out-of-Bag} classification error by using cross-validation to determine  the optimal value of \textit{ntree} (which represents the number of trees to grow) hyperparameter \citep{james2013introduction}.
+
+\subsubsection{Random Forest}
+
+As opposed to Bagging which considers all the predictors at each split in a tree, in Random Forest, $m$ random samples of $p$ predictors is chosen as a split candidate and only one of the $m$ predictors is used after which a fresh sample is taken for the next split. Ideally, the number of predictors at each split is approximately equal tot the number of predictors, $m\approx\sqrt{p}$. We denote this by $mtry$ and we use cross-validation to determine optimal value \citep{james2013introduction}. 
+
+\subsubsection{Boosting}
+
+
+As opposed to bagging, which involves growing $B$ trees independently, boosting involves growing the trees sequentially using the information from the previous tree. In particular, in Boosting the original dataset is slightly modified and a tree grown as opposed to Bagging which involves bootstrapping the training dataset. Boosting model has parameters: 1) \textit{shrinkage parameter}, $\lambda>0$, which controls the rate at which boosting algorithm learns; 2) the number $d$ $(interaction.depth)$ which controls the complexity of the boosted trees; and 3) $n.minobsinnode$ which controls the minimum number of observations at each terminal nodes \citep{james2013introduction}.
+
+
+\subsubsection{$k$-Nearest Neighbours (kNN)}
+
+Given $k>0$ and $x_0$ as a test label, kNN first identifies $k$ points in the neighbourhood of $x_0$, denoted as $\mathit{N}_0$. Based on the conditional probability of $x_0$ belonging to class $j$, 
+\[
+P(Y = j|X = x_0) = \frac{1}{k}\sum_{i\in \mathit{N}_0}I(y_i=j),
+\]
+$I(y_i=j)$ is indicator variable that equals 1 if $y_i=j$, 0 otherwise), KNN applies Bayes rule and classifies $x_0$ to the class with the largest probability \citep{trevor2009elements}. In this case, crossfold validation was used to determine optimal $k$.
+
+\subsubsection{Naive Bayes Classifier}
+
+Naive Bayes is a machine learning classification algorithm which classifies an object, with some given features, to a given class based on conditional probability. It assumes that the features are conditionally independent given the input values. This means that the probability of observing the set of features $x_1, x_2, \cdots, x_n$ is simply the product of individual probabilities.
+
+\noindent Let $C_i; 1\leq i \leq k$ be the target class, where $k$ is the total number of distinct classes and $x_j; j=1\cdots n$ be the features. Then 
+\begin{align*}
+P(x_1, x_2, \cdots, x_n|C_i) = \prod_j{P(x_j|C_i)}
+\end{align*}
+and the Bayes Classifier is given by
+\begin{align}
+NB_{class} =  \underset{C_i\in C}{\mathrm{argmax }}\left[ P(C_i) \prod_j{P(x_j|C_i)}\right] \label{eqn1}
+\end{align}
+
+\noindent The algorithm estimates $P(C_i)$ and $P(x_j|C_i)$ based on the observed frequencies in the training dataset. This implies that this algorithm doesn't require explicit search space since the learned hypothesis is simply formed by simply counting the frequency of various data combinations (in case of categorical feature) or by calculating some probability density based on some distributional assumption (e.g., Gaussian) for continuous feature. Given a new instance, the classifier predicts its class by assigning it to a class in which \autoref{eqn1} is maximum given a set of features \citep{mitchell1990machine}.
+
+\subsubsection{Linear Discriminant Analysis (LDA)}
+
+Extending \autoref{eqn1} to classify observations into one of the $k$ classes, $k\geq2$. Let $\pi_k$ be the overall probability that an observation comes from $k$th class. Also let $f_k(x)$ denote the density function for an observation that comes the $k$th class. Then by Bayes' theorem
+\begin{align}
+Pr(Y=k|X=x)=\frac{\pi_kf_k(x)}{\sum^k_{l=1}\pi_lf_l(x)}\label{Eq:lda1}
+\end{align}
+The aim is to use LDA to estimate the density function $f_k(x)$ and then apply the Bayes' classifier.\\
+
+\noindent Let $X\sim N(\mu_k, \Sigma)$, where $X = (X_1, X_2, \cdots, X_p)$ is a p-dimensional random variable drawn from a multivariate distribution with $E(X) = \mu$ and $Cov(X) = \Sigma$, then multivariate density for $X=x$ is defined as
+\[
+f(x) = \frac{1}{(2\pi)^{p/2}|\Sigma|^{1/2}}\exp\left(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu)\right)
+\]
+For $p>1$, LDA assumes that the observation from the $k$th class drawn from a multivariate normal distribution has a class-specific mean of $\mu_k$ and a common covariance of across all the classes of $\Sigma$. Bayes classifier in \autoref{Eq:lda1} is then used for $k$th class density function $f_k(X=x)$ such that the classifier assigns the observation $X=x$ to the class which
+\[
+\sigma_k(x) = x^T\Sigma^{-1}\mu_k - \frac{1}{2}\Sigma^T_{k}\Sigma^{-1}\mu_k + \log\pi_k
+\]
+is the greatest \citep{james2013introduction}.
+
+\subsubsection{Quadratic Discriminant Analysis (QDA)}
+
+As opposed to LDA assumption of common covariance across all the $k$ classes, QDA assumes that the observation from the $k$th class drawn from a multivariate normal distribution has its own class-specific mean, $\mu_k$ and class-specific covariance matrix, $\Sigma_k$, that is to say, $X\sim N(\mu_k, \Sigma_k)$. Again, the Bayes classifier assigns $X=x$ to class for which
+\begin{align*}
+\sigma_k(x) &= -\frac{1}{2}(x-\mu_k)^T\Sigma^{-1}_k(x-\mu_k) - \frac{1}{2}\log|\Sigma_k| + \log\pi_k\\
+&= -\frac{1}{2}x^T\Sigma^{-1}_kx + x^T\Sigma^{-1}_k - \frac{1}{2}\mu^T_k\Sigma_k - \frac{1}{2}\log|\Sigma_k| + \log\pi_k
+\end{align*}
+is the greatest \citep{james2013introduction}.
+
+\subsubsection{Neural Network (NN)}
+\noindent A neural network model can be thought of as a model consisting of an \textit{activation function}, hidden units and layers and the output (layer). The activation function transforms input to output through the hidden units (neurons) and provides outputs which are a linear combination of the input variables.
+\noindent Given input vector $\mathbf{X}$ with $p$ components and a target $\mathbf{Y}$ with $K$ classes, the hidden units, $Z_1, \cdots Z_m$, which a linear combination of the input $\mathbf{X}$ is defined as $$Z_m = \sigma(\alpha_{0m} + \alpha_m'\mathbf{X}).$$ $Y_k$ is then modeled as a linear combination of $Z_m$, as follows: $$T_k = \beta_{0k} + \beta_k'\mathbf{Z} \quad \text{and} \quad f_k(X) = g_k(\mathbf{T}).$$ Where $\mathbf{Z} = (Z_1, Z_2 \cdots Z_m)'$ and $\mathbf{T} = (T_1, T_2, \cdots, T_k)'$; $\sigma()$ is the nonlinear activation (e.g., sigmoid $\sigma(v) = 1/(1-\exp(-v))$); $g_k(K)$ is the softmax output transformation function defined as $g_k(T) = \frac{\exp(T_k)}{\sum_{h=1}^k(\exp(T_k))}$ while $\alpha_{0m}$, $\alpha_m$, $\beta_{0k}$ and $\beta_k$ are the unknown weights to be estimated. The unknown weights are estimated using \textit{back-propagation} through \textit{gradient descent} \cite{trevor2009elements}. Training NN involves optimizing the \textit{weight decay}, $\lambda\geq0$, such that larger values of $\lambda$ tends to shrink the weights towards zero. This helps reduce \textit{overfitting} problems. The other \textit{hyperparameter} to optimize is the number of \textit{hidden units}, \textit{size}, in the hidden layer. Cross-validation was used to determine the optimal value of $\lambda$ and \textit{size}.
+
+\subsection{Model training, evaluations, testing and comparisons}
+
+Dataset was randomly partitioned (stratified within the response variable) into $75\%$ training set and $25\%$ test set. A 10-fold Cross-Validation (CV) was used on the training set in order to obtain the optimal, \textit{best}, parameter values. A \textit{random search} parameter space with a \textit{tunelength = 10} was used for all the models which required hyperparameter specification as discussed above (please see more information in \textit{caret} help page). \\
+
+\noindent ROC (receiver operating characteristic curve) and AUC (area under the curve) were used as the performance metric for the algorithm within Cross-Validation resamples and also to compare between the models (on the test data). ROC gives a mechanism to evaluate the predictions at different classification thresholds. ROC represents a probability curve (True Positive Rate (TPR) against False Positive Rate (FPR)) at varying thresholds while AUC gives the overall performance of the classifier summarized over all possible thresholds. The higher the AUC, the better the model at correctly predicting 0s as 0s and 1s as 1s. Model \textit{accuracy} (sum of True Positive (TP) and True Negative (TN) divided by total sample) was also reported for comparison to existing studies \citep{james2013introduction}.
+
+\clearpage
+
+\section{Results}
+
+The dataset contains $569$ cases and $32$ variables, of which, 31 describes characteristics of the cell nuclei present in the image and the other one is the diagnosis status. Table \ref{var_desc} below describes the variables.
+\vspace*{-10pt}
+\begin{table}[H]
+\centering
+\caption{\small{Variables description and summary}}\vspace{-0.3cm}
+\scalebox{0.48}{
+%\begin{tabular}{ll}
+\begin{tabular}{llll}
+\hline
+\input{var_summary1}
+\label{var_desc}
+\end{tabular}
+}
+\end{table}
+\vspace*{-12pt}
+
+\noindent Figure \ref{fig:features} shows compares cell nuclei readings between the diagnosis status.  Most of the variables do not show clear separation of diagnosis status (for example \textit{semmetryse} and \textit{smoothnessse} the two classes are almost superimposed). However, there is a fairly good separation for \textit{concavepointsmean}, \textit{concavepointsworst}, \textit{concavityworst}, \textit{areamean} and \textit{perimetermean}.
+
+\noindent\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{features_density_plot1.pdf}\vspace{-0.3cm}
+    \caption{\small{Distribution of features by diagnosis. The straight dotted lines are the mean values per diagnosis.}}\label{fig:features}
+    %\caption{Distribution of variables by diagnosis}\label{Fig:Var_Desc1}\vspace{-0.3cm}
+\end{figure}
+
+\clearpage
+
+
+\newpage
+%\bibliographystyle{unsrt}
+\bibliographystyle{plainnat}
+\bibliography{Presentation12}
+\end{document}

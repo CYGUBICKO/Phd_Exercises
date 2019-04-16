@@ -56,6 +56,9 @@ clean.Rout: wdbc.Rout clean.R
 
 ## Some analyses
 
+## Descriptive
+descriptive.Rout: clean.Rout descriptive.R
+
 ## Caret package
 
 ## Inputs and model control parameters
@@ -86,6 +89,10 @@ model_predictions.Rout: model_fits.Rout model_predictions.R
 ## ROC-AUC Confidence Intervals
 auc_ci.Rout: model_predictions.Rout auc_ci.R
 
+## 
+Sources += Steve_FinalProject.tex
+
+Steve_FinalProject.pdf: Steve_FinalProject.tex
 
 ######################################################################
 
@@ -111,14 +118,18 @@ polyr.Rout: model_predictions.Rout polyr.R
 ######################################################################
 
 clean: 
-	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog
+	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog *.Rlog *.rdeps *.rda .*.rdeps .*.rda *.vrb *.toc *.out *.nav *.snm *.log *.aux
+
 
 ######################################################################
 
 
 ### Makestuff
 
--include $(ms)/pandoc.mk
 -include $(ms)/git.mk
 -include $(ms)/visual.mk
 -include $(ms)/wrapR.mk
+-include $(ms)/texdeps.mk
+-include $(ms)/pandoc.mk
+-include $(ms)/autorefs.mk
+
