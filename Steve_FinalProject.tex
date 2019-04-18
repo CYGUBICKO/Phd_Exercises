@@ -35,7 +35,8 @@
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
-\usepackage{graphicx}
+\usepackage{graphicx,grffile}
+
 
 \usepackage{amssymb}
 
@@ -271,7 +272,64 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
 \end{figure}
 
 \clearpage
+\noindent\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{RF_Plots.Rout.pdf}
+        \caption{\small{Random Forest}}\label{fig:rf_cv}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{KNN_Plots.Rout.pdf}
+        \caption{\small{$k$-Nearest Neigbours}}\label{fig:knn_cv}
+    \end{subfigure}
+    
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{BOOST_Plots.Rout.pdf}
+        \caption{\small{Boosting}}\label{fig:boost_cv}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{NN_Plots.Rout.pdf}
+        \caption{\small{Neural Network}}\label{fig:nn_cv}
+    \end{subfigure}
+    \caption{\small{Unsupervised methods: Figure \ref{fig:kmoids_clust1a} to Figure \ref{fig:kmoids_clust1d} and Figure \ref{fig:kmeans_clust1a} to Figure \ref{fig:kmeans_clust1d} are the results for $k$-medoids and $k$-means, respectively.}}\label{fig:cv_results}
+\end{figure}
 
+\noindent\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{auc_Plots.Rout.pdf}\vspace{-0.3cm}
+    \caption{\small{Distribution of features by diagnosis. The straight dotted lines are the mean values per diagnosis.}}\label{fig:auc_resamples}
+    %\caption{Distribution of variables by diagnosis}\label{Fig:Var_Desc1}\vspace{-0.3cm}
+\end{figure}
+
+\vspace*{-10pt}
+\begin{table}[H]
+\centering
+\caption{\small{Variables description and summary}}\vspace{-0.1cm}
+\scalebox{0.6}{
+\begin{tabular}{l|l}
+\begin{tabular}{lcccc}
+\hline
+\input{test_measures_df}
+\end{tabular}
+~~
+&
+~~
+\begin{tabular}{llc}
+\hline
+\input{best_metric}
+\end{tabular}
+\label{Tab:metric_summary}
+\end{tabular}
+}
+\end{table}
+\vspace*{-12pt}
+
+\noindent\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{roc_Plots.Rout.pdf}\vspace{-0.3cm}
+    \caption{\small{Distribution of features by diagnosis. The straight dotted lines are the mean values per diagnosis.}}\label{fig:roc}
+    %\caption{Distribution of variables by diagnosis}\label{Fig:Var_Desc1}\vspace{-0.3cm}
+\end{figure}
 
 \newpage
 %\bibliographystyle{unsrt}

@@ -66,7 +66,7 @@ descriptive.Rout: clean.Rout descriptive.R
 control_parameters.Rout: control_parameters.R
 
 ## Define a partition function
-data_partition.Rout: control_parameters.Rout clean.Rout data_partition.R
+data_partition.Rout: control_parameters.Rout descriptive.Rout data_partition.R
 
 ## Define the model_control function
 training_control.Rout: control_parameters.Rout training_control.R
@@ -90,9 +90,17 @@ model_predictions.Rout: model_fits.Rout model_predictions.R
 ## ROC-AUC Confidence Intervals
 auc_ci.Rout: model_predictions.Rout auc_ci.R
 
-## 
-Sources += Steve_FinalProject.tex
+## Final project writeup
+RF_Plots.Rout: model_predictions.Rout RF_Plots.R
+BOOST_Plots.Rout: RF_Plots.Rout BOOST_Plots.R
+KNN_Plots.Rout: BOOST_Plots.Rout KNN_Plots.R
+NN_Plots.Rout: KNN_Plots.Rout NN_Plots.R
+auc_Plots.Rout: KNN_Plots.Rout auc_Plots.R
+roc_Plots.Rout: auc_Plots.Rout roc_Plots.R
+test_summary.Rout: auc_Plots.Rout test_summary.R
 
+## Writeup
+Sources += Steve_FinalProject.tex
 Steve_FinalProject.pdf: Steve_FinalProject.tex
 
 ######################################################################
@@ -119,7 +127,7 @@ polyr.Rout: model_predictions.Rout polyr.R
 ######################################################################
 
 clean: 
-	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog *.Rlog *.rdeps *.rda .*.rdeps .*.rda *.vrb *.toc *.out *.nav *.snm *.log *.aux
+	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog *.Rlog *.rdeps *.rda .*.rdeps .*.rda *.vrb *.toc *.out *.nav *.snm *.log *.aux *.bbl *.blg *.dvi *.ps *.gz
 
 
 ######################################################################

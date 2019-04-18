@@ -10,7 +10,7 @@ models <- c(LDA = "lda"
 	, RF = "ranger"
 	, BOOST = "gbm"
 	, KNN = "knn"
-	, NN = "nb" 
+	, NB = "nb" 
 	, NN = "nnet"
 )
 

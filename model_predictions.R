@@ -1,5 +1,4 @@
 library(caret)
-library(ROCR)
 library(tidyr)
 library(ggplot2)
 library(dplyr)
@@ -8,25 +7,32 @@ theme_set(theme_bw() +
 	theme(panel.spacing=grid::unit(0,"lines")))
 
 # Predictions
+n_models <- length(fitted_models)
+test_measures_df <- data.frame(Model = rep(NA, n_models)
+	, Accuracy = rep(NA, n_models)
+	, Sensitivity = rep(NA, n_models)
+	, Specificity = rep(NA, n_models)
+	, AUC = rep(NA, n_models)
+)
 obs_pred_df <- list()
 prob_pred_df <- list()
 roc_df <- list()
 auc_vals <- list()
-for (i in 1:length(fitted_models)){
+for (i in 1:n_models){
 	set.seed(237)
-	# Predicted class
 	model = gsub("_fit", "", names(fitted_models)[i])
-	obs_pred_df[[names(fitted_models)[i]]] <- data.frame(
+	# Model prediction
+	predicted <- predict(fitted_models[[i]], test_df)
+	confusion_mat <- confusionMatrix(predicted, test_df$diagnosis, positive = "M")
+	# Predicted class
+	obs_pred_df[[model]] <- data.frame(
 		model = model
 		, obs = test_df$diagnosis
-		, pred = predict(
-				fitted_models[[i]]
-				, test_df
-			)
+		, pred = predicted
 	)
 	
 	# Predicted Probabilities
-	prob_pred_df[[names(fitted_models)[i]]] <- (
+	prob_pred_df[[model]] <- (
 		predict(fitted_models[[i]]
 			, test_df
 			, type = "prob"
@@ -36,20 +42,27 @@ for (i in 1:length(fitted_models)){
 	)
 
 	# Extract ROCs based on the predictions
-	rocr_pred <- prediction(prob_pred_df[[names(fitted_models)[i]]][,2]
+	rocr_pred <- prediction(prob_pred_df[[model]][,2]
 		, test_df$diagnosis
 	)
 	model_roc <- performance(rocr_pred
 		, "tpr"
 		, "fpr"
 		)
-	roc_df[[names(fitted_models)[i]]] <- data.frame(model = model
+	roc_df[[model]] <- data.frame(model = model
 		, x = model_roc@x.values[[1]]
 		, y = model_roc@y.values[[1]]
 	)
-	auc_vals[[names(fitted_models)[i]]] <- performance(rocr_pred
+	auc_vals[[model]] <- performance(rocr_pred
 		, "auc" 
 	)@y.values[[1]]
+	
+	# Put together all performance measures
+	test_measures_df[["Model"]][[i]] <- model
+	test_measures_df[["Accuracy"]][[i]] <- confusion_mat$overall[[1]]
+	test_measures_df[["Sensitivity"]][[i]] <- confusion_mat$byClass[[1]]
+	test_measures_df[["Specificity"]][[i]] <- confusion_mat$byClass[[2]]
+	test_measures_df[["AUC"]][[i]] <- auc_vals[[model]]
 }
 
 # Format data outputs
@@ -137,8 +150,7 @@ print(
 		, aes(x = reorder(Model, -AUC), y = AUC, colour = Model)
 		)
 		+ geom_boxplot(outlier.colour=NULL)
-#		+ scale_colour_manual(values = col_scheme)
-		+ scale_colour_brewer(palette="Dark2")
+		+ scale_colour_brewer(palette="Set1")
 		+ labs(title = "AUC comparison"
 			, x = "Model"
 			, y = "AUC"
@@ -148,13 +160,12 @@ print(
 
 # ROC curves
 roc_df <- Reduce(rbind, roc_df)
-
 roc_plot <- (
 	ggplot(roc_df, aes(x = x, y = y, group = model, colour = model))
 	+ geom_line()
 	+ scale_x_continuous(limits = c(0, 1))
 	+ scale_y_continuous(limits = c(0, 1))
-	+ scale_colour_brewer(palette="Dark2")
+	+ scale_colour_brewer(palette="Set1")
 	+ labs(title = "ROCs comparison"
 		, x = "False positive rate"
 		, y = "True positive rate"
@@ -162,5 +173,3 @@ roc_plot <- (
 )
 roc_plot
 
-# AUC values
-auc_vals

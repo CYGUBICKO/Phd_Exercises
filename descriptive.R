@@ -58,7 +58,7 @@ features_density_plot <- (features_df
 		+ geom_density(aes(fill = diagnosis), alpha = 0.3)
 		#+ scale_colour_manual(values = c(1:10))
 		#+ scale_fill_manual(values = c(1:10))
-		+ scale_colour_brewer(palette="Dark2")
+		#+ scale_colour_brewer(palette="Dark2")
 		+ geom_vline(data = diagnosis_mean, aes(xintercept = values, color = diagnosis),
 				 linetype="dashed")
 		+ theme(legend.position="bottom")
