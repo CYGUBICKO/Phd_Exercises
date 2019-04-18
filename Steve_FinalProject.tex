@@ -174,7 +174,7 @@ In classification setting, the prediction from each of the $B$ trees are recorde
 
 \subsubsection{Random Forest}
 
-As opposed to Bagging which considers all the predictors at each split in a tree, in Random Forest, $m$ random samples of $p$ predictors is chosen as a split candidate and only one of the $m$ predictors is used after which a fresh sample is taken for the next split. Ideally, the number of predictors at each split is approximately equal tot the number of predictors, $m\approx\sqrt{p}$. We denote this by $mtry$ and we use cross-validation to determine optimal value \citep{james2013introduction}. 
+As opposed to Bagging which considers all the predictors at each split in a tree, in Random Forest, $m$ random samples of $p$ predictors is chosen as a split candidate and only one of the $m$ predictors is used after which a fresh sample is taken for the next split. Ideally, the number of predictors at each split is approximately equal to the square root number of predictors, $m\approx\sqrt{p}$. We denote this by $mtry$ and use cross-validation to determine optimal value \citep{james2013introduction}. 
 
 \subsubsection{Boosting}
 
@@ -272,6 +272,7 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
 \end{figure}
 
 \clearpage
+\noindent \autoref{fig:cv_results} below summarizes and compares the 10-fold cross-validation result for some of the models. In particular, Random Forest \textit{best} model had $2$ predictors chosen at each split, \autoref{fig:rf_cv}; the optimal size of the neighbourhood, $k$, was $k = 23$ for $k-$Nearest Neighbours model, \autoref{fig:knn_cv}; Boosting \textit{best} model had $500$ trees fitted with a maximum interaction depth of $2$ and a learning rate of $0.1$, \autoref{fig:boost_cv}; and the \textit{best} Neural Network model had $9$ hidden neurons with a weight decay rate of $0.0075$, \autoref{fig:nn_cv}.
 \noindent\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
@@ -280,9 +281,8 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
     \end{subfigure}
     \begin{subfigure}[b]{0.4\textwidth}
         \includegraphics[width=\textwidth]{KNN_Plots.Rout.pdf}
-        \caption{\small{$k$-Nearest Neigbours}}\label{fig:knn_cv}
+        \caption{\small{$k$-Nearest Neighbours}}\label{fig:knn_cv}
     \end{subfigure}
-    
     \begin{subfigure}[b]{0.4\textwidth}
         \includegraphics[width=\textwidth]{BOOST_Plots.Rout.pdf}
         \caption{\small{Boosting}}\label{fig:boost_cv}
@@ -291,21 +291,22 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
         \includegraphics[width=\textwidth]{NN_Plots.Rout.pdf}
         \caption{\small{Neural Network}}\label{fig:nn_cv}
     \end{subfigure}
-    \caption{\small{Unsupervised methods: Figure \ref{fig:kmoids_clust1a} to Figure \ref{fig:kmoids_clust1d} and Figure \ref{fig:kmeans_clust1a} to Figure \ref{fig:kmeans_clust1d} are the results for $k$-medoids and $k$-means, respectively.}}\label{fig:cv_results}
+    \caption{{A summary for hyperparameter optimal values for some of the models. The results are based on a $10$-fold Cross-Validation. The \textit{best} tune parameter values were used in the final model used in the test dataset.}}\label{fig:cv_results}
 \end{figure}
 
+\clearpage
+\noindent \autoref{fig:auc_resamples} compares the ROC-AUC scores of each of the models for the $10$ cross-validation resamples. Boosting model had the highest median value of AUC followed by Neural Network model while Classification Tree was the worst performing.
 \noindent\begin{figure}[H]
     \centering
     \includegraphics[width=0.4\textwidth]{auc_Plots.Rout.pdf}\vspace{-0.3cm}
-    \caption{\small{Distribution of features by diagnosis. The straight dotted lines are the mean values per diagnosis.}}\label{fig:auc_resamples}
-    %\caption{Distribution of variables by diagnosis}\label{Fig:Var_Desc1}\vspace{-0.3cm}
+    \caption{\small{Boxplots of the AUC for each of the 10 folds (resamples) of all the fitted models.}}\label{fig:auc_resamples}
 \end{figure}
 
-\vspace*{-10pt}
+\noindent \autoref{Tab:metric_summary} below summarizes the performance metric measures on the test dataset. For each model, \textit{accuracy, sensitivity, specificity and AUC} were recorded and then compared to determine the best performer per metric.
 \begin{table}[H]
 \centering
-\caption{\small{Variables description and summary}}\vspace{-0.1cm}
-\scalebox{0.6}{
+\caption{\small{Model evaluation metrics on test dataset. \textit{Left:} metric scores for all the models; \textit{right:} best performing model for each metric.}}\vspace{-0.1cm}
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{l|l}
 \begin{tabular}{lcccc}
 \hline
@@ -324,10 +325,20 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
 \end{table}
 \vspace*{-12pt}
 
+\clearpage
+\noindent \autoref{fig:roc} compares ROC curves (on the test dataset) for fitted models. The \textit{true positive rate} is the proportion of \textit{Malignant} that are correctly classified (sensitivity) while the \textit{false positive rate} (1-specificity) is the proportion of \textit{benign} that are incorrectly as \textit{malignant}, for a given threshold.
+
 \noindent\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{roc_Plots.Rout.pdf}\vspace{-0.3cm}
-    \caption{\small{Distribution of features by diagnosis. The straight dotted lines are the mean values per diagnosis.}}\label{fig:roc}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{roc_Plots.Rout.pdf}
+        \caption{\small{Neural Network}}\label{fig:roc}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=\textwidth]{auc_ci.Rout.pdf}
+        \caption{\small{Neural Network}}\label{fig:roc_ci}
+    \end{subfigure}    
+    \caption{\small{Distribution of features by diagnosis. The straight dotted lines are the mean values per diagnosis.}}\label{fig:roc_ci}
     %\caption{Distribution of variables by diagnosis}\label{Fig:Var_Desc1}\vspace{-0.3cm}
 \end{figure}
 

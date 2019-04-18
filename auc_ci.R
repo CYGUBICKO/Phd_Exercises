@@ -2,6 +2,9 @@ library(dplyr)
 library(pROC)
 library(tibble)
 library(ggplot2)
+theme_set(theme_bw() + 
+	theme(panel.spacing=grid::unit(0,"lines")))
+
 set.seed(237)
 
 ## This script computes the CI for AUC using
@@ -41,7 +44,7 @@ print(
   + geom_point(size = 4)
   + geom_errorbar(aes(ymin = Lower, ymax = Upper))
   + labs(x = "Model"
-  ,	y = "CI"
-  ,	title = "Compare CI of the models"
+  ,	y = "AUC"
+# ,	title = "Compare CI of the models"
   )
 )
