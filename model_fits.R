@@ -1,4 +1,6 @@
 library(caret)
+library(gbm)
+library(nnet)
 library(doParallel) # parallel processing
 registerDoParallel()
 require(foreach)
