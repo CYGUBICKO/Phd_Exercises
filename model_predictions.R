@@ -19,7 +19,7 @@ prob_pred_df <- list()
 roc_df <- list()
 auc_vals <- list()
 for (i in 1:n_models){
-	set.seed(237)
+	set.seed(257)
 	model = gsub("_fit", "", names(fitted_models)[i])
 	# Model prediction
 	predicted <- predict(fitted_models[[i]], test_df)

@@ -74,7 +74,7 @@
 %----------------------------------------------------------------------------------------
 
 \textsc{\LARGE McMaster University}\\[1.5cm] % Name of your university/college
-\textsc{\Large CSE 780, Winter Final Project}\\[0.5cm] % Major heading such as course name
+\textsc{\Large CSE 799, Winter Final Project}\\[0.5cm] % Major heading such as course name
 %\textsc{\large }\\[0.5cm] % Minor heading such as course title
 
 %----------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@
 %----------------------------------------------------------------------------------------
 
 \HRule \\[0.4cm]
-{ \Huge \bfseries Predicting Species of Anuran (frogs) using Classification and Clustering Machine Learning Algorithms}\\[0.4cm] % Title of your document
+{ \Huge \bfseries Predicting Breast Cancer Diagnosis using  Machine Learning Algorithms}\\[0.4cm] % Title of your document
 \HRule \\[1.5cm]
 
 %----------------------------------------------------------------------------------------
@@ -100,7 +100,8 @@ Steve \textsc{Cygu}\\
 \begin{minipage}{0.4\textwidth}
 \begin{flushright} \large
 \emph{Instructor:} \\
-Prof. Sharon \textsc{McNicholas} % Supervisor's Name
+Prof. Jonathan \textsc{Dushoff}\\ % Supervisor's Name
+Prof. Ben \textsc{Bolker}
 \end{flushright}
 \end{minipage}\\[2cm]
 
@@ -118,7 +119,7 @@ Prof. Sharon \textsc{McNicholas} % Supervisor's Name
 %	LOGO SECTION
 %----------------------------------------------------------------------------------------
 
-\includegraphics{logo.jpg}\\[1cm] % Include a department/university logo - this will require the graphicx package
+\includegraphics{McMasterfull_colour.jpg}\\[1cm] % Include a department/university logo - this will require the graphicx package
 
 %----------------------------------------------------------------------------------------
 
@@ -139,28 +140,28 @@ Prof. Sharon \textsc{McNicholas} % Supervisor's Name
 \noindent
 Machine learning (ML) techniques allows computers to `learn' and discern patterns from large, noisy or complex datasets. This capability makes ML approaches best-suited to cancer prognosis and prediction. Application of various ML methods in development of cancer predictive models have resulted into improved understanding of cancer patients and better decision making. Clinical management of cancer patients can be improved by early diagnosis and prognosis, resulting to improvements in cancer research. One of the problems which has led to emergence of applications of ML methods in cancer research is the need to classify cancer patients into low and high risk groups \citep{kourou2015machine}.\\
 
-\noindent Breast cancer is one of the leading causes of death in women. In the US, at least $1$ in $8$ women are at risk of developing invasive breast cancer over the cause of their lifetime. It is expected that $268,600$ cases of cancer will be diagnosed in US women by the end of $2019$, of which $62,930$ are expected to be breast cancer and about $41,760$ cases may result to death \citep{uscancer2019}. However, there has been an overall decline in cancer incidence and cancer related deaths since $2000$. This can be attributed to advancement in cancer research especially: early screening and diagnosis, improved treatment methods and awareness campaigns \citep{asri2016using}. Breast cancer occurs when there is an abnormal growth of cells in the breast tissue. This may result into \textit{tumor growth}, which can either be \textit{cancerous} or \textit{non-cancerous}. \textit{Malignant} tumors are cancerous and attack other cells by growing into or spreading to the nearby tissues. Other other hand, \textit{benign} tumors are non-cancerous which are nolonger capable of growing or behaving normally. Other types of breast cancer are \textit{in situ}: \textit{ductal carcinoma} and \textit{lobular carcinoma}.\\
+\noindent Breast cancer is one of the leading causes of death among women. In the US, at least $1$ in $8$ women are at risk of developing invasive breast cancer over the cause of their lifetime. It is expected that $268,600$ cases of cancer will be diagnosed among US women by the end of $2019$, of which $62,930$ are expected to be breast cancer and about $41,760$ cases may result to death \citep{uscancer2019}. However, there has been an overall decline in cancer incidence and cancer related deaths since $2000$. This can be attributed to advancement in cancer research especially: early screening and diagnosis, improved treatment methods and awareness campaigns \citep{asri2016using}. Breast cancer occurs when there is an abnormal growth of cells in the breast tissue. This may result into \textit{tumor growth}, which can either be \textit{cancerous} or \textit{non-cancerous}. \textit{Malignant} tumors are cancerous and attack other cells by growing into or spreading to the nearby tissues. On the other hand, \textit{benign} tumors are non-cancerous which are nolonger capable of growing or behaving normally. Other types of breast cancer are \textit{in situ}: \textit{ductal carcinoma} and \textit{lobular carcinoma}.\\
 
-\noindent Many ML algorithms have been used to classify breast cancer, specifically Wisconsin (Diagnostic) Breast Cancer Dataset (WDBC). \citeauthor{chaurasia2017data} applied and compared Naive Bayes, SVM-RBF kernel, Neural Network, Decision Tree and CART algorithms on WDBC orginal dataset to evaluate the best performer. The best model, SVM-RBF kernel, had the highest accuracy of $96.84\%$. \citeauthor{djebbari2008ensemble} used ensemble ML techniques to predict the survival time in breast cancer. Their methods showed improved performance as compared to earlier methods \citep{asri2016using}. \citeauthor{aruna2011knowledge} compared the performance of C4.5, Naive Bayes, SVM and KNN on WDBC. Their best model had an accuracy of $96.99\%$. On the other hand, \citeauthor{asri2016using} compared the same models and achieved an accuracy of $97.13\%$ with SVM as the best model \citep{asri2016using}.\\
+\noindent Many ML algorithms have been used to classify breast cancer, specifically Wisconsin (Diagnostic) Breast Cancer (WDBC) Dataset. \citet{chaurasia2017data} applied and compared Naive Bayes, SVM-RBF kernel, Neural Network, Decision Tree and CART algorithms on WDBC orginal dataset to evaluate the best performer. The best model, SVM-RBF kernel, had the highest accuracy of $96.84\%$. \citet{djebbari2008ensemble} used ensemble ML techniques to predict the survival time in breast cancer. Their methods showed improved performance as compared to earlier methods \citep{asri2016using}. \citet{aruna2011knowledge} compared the performance of C4.5, Naive Bayes, SVM and KNN on WDBC. Their best model had an accuracy of $96.99\%$. On the other hand, \citet{asri2016using} compared the same models and achieved an accuracy of $97.13\%$ with SVM as the best model \citep{asri2016using}.\\
 
 
-\noindent This analysis uses  Wisconsin Breast Cancer (Diagnostic) Dataset downloaded from \href{https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)}{UCI Machine Learning Repository} with features computed from a digitized image of a fine needle aspirate (FNA) created from fluid samples obtained from cancer patients with solid breast masss \citep{ucidata}. This was done through curve fitting algorithm which calculates the mean value, extreme value and standard error of each of the feature for the image. The main aim of the analysis apply Neural Networks, Classification trees, Bagging, Boosting, Random Forest, $k-$Nearest Neighbours, Naive Bayes, Linear and Quadratic Discriminant Analysis ML algorithms on WDBC to classify cancer diagnosis (as either Malignant or Benign) based on $31$ derived features describing the characteristics of cell nuclei. The aim is to evaluate the performance of these algorithms  based on AUC and ROC.
+\noindent This analysis uses  Wisconsin (Diagnostic) Breast Cancer (WDBC) Dataset downloaded from \href{https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)}{UCI Machine Learning Repository} with features computed from a digitized image of a fine needle aspirate (FNA) created from fluid samples obtained from cancer patients with solid breast masss \citep{ucidata}. This was done through curve fitting algorithm which calculates the mean value, extreme value and standard error of each of the feature for the image. The main aim of the analysis is to apply Neural Networks, Classification trees, Bagging, Boosting, Random Forest, $k-$Nearest Neighbours, Naive Bayes, Linear and Quadratic Discriminant Analysis ML algorithms on WDBC to classify cancer diagnosis (as either Malignant or Benign) based on $31$ derived features describing the characteristics of cell nuclei. The performance of the resulting models are then evaluated based on AUC and ROC, sensitivity, specificity and accuracy.
 
 \clearpage
 \section{Methods}
 
 \subsection{Models}
-In this section, models investigated in this analysis are described:
+In this section, models investigated in the analysis are described:
 
 \subsubsection{Classification Trees (CT)}
 
-Classification (decision) tree involves partitioning the data (predictors) repeatedly into multiple sub-regions so that the observations in each of the final sub-regions are as homogeneous as possible. To predict a particular observation, it is assigned to the most commonly occurring class of the observation in the sub-region where it belongs. 
+Classification (decision) tree involves partitioning the data (predictors) repeatedly into multiple sub-regions so that the observations in each of the final sub-regions are as homogeneous as possible. To predict a particular observation, it is assigned to the most commonly occurring class of the observation in the sub-region where it belongs. \\
 
-\noindent Let $\hat{p}_{mk}$ be the proportion of training observations of class $k$ in the $m$th sub-region, the measures of node purity (number of unique classes at the node) are \textit{Gini index} and the \textit{entropy}, which are defined as $G = \sum_{k=1}^K\hat{p}_{mk}(1-\hat{p}_{mk})$ and $D = \sum_{k=1}^K\hat{p}_{mk}\log \hat{p}_{mk}$, respectively. The Gini index and the entropy varies from 0 (highest purity) to 1 (highest degree of impurity). 
+\noindent Let $\hat{p}_{mk}$ be the proportion of training observations of class $k$ in the $m$th sub-region, the measures of node purity (number of unique classes at the node) are \textit{Gini index} and the \textit{entropy}, which are defined as $G = \sum_{k=1}^K\hat{p}_{mk}(1-\hat{p}_{mk})$ and $D = \sum_{k=1}^K\hat{p}_{mk}\log \hat{p}_{mk}$, respectively. The Gini index and the entropy varies from 0 (highest purity) to 1 (highest degree of impurity).\\ 
 
-\noindent To avoid overfitting and growing unnecessarily large trees, classification trees are \textit{pruned}. This involves avoiding splitting a partition if it does not significantly improve the model quality. A \textit{complexity parameter} \textit{cp} to penalize the tree for  unnecessarily many splits can be used. A high value of \textit{cp} leads to small tree while a small value of \textit{cp} leads to overfitting (large tree). $10$-fold cross-validation was used to choose the optimal value of \textit{cp}. 
+\noindent To avoid overfitting and growing unnecessarily large trees, classification trees are \textit{pruned}. This involves avoiding splitting a partition if it does not significantly improve the model quality. A \textit{complexity parameter} \textit{cp} to penalize the tree for  unnecessarily many splits can be used. A high value of \textit{cp} leads to small tree while a small value of \textit{cp} leads to overfitting (large tree). 
 
-\subsubsection{Bagging}
+\subsubsection{Bagging (BAG)}
 
 Consider $\hat{f}^1, \hat{f}^2, \cdots, \hat{f}^B$ predictions of $B$ training sets, bagging (bootstrap aggregation) averages $\hat{f}^*(x)$ to obtain a low variance model defined as
 \[
@@ -172,25 +173,16 @@ However, in practice, $B$ different bootstrap samples are generated from the tra
 \]
 In classification setting, the prediction from each of the $B$ trees are recorded and then the overall prediction is the most commonly occurring class, $k$, of the $B$th tree. This is called \textit{majority vote}. The aim is to minimize the \textit{Out-of-Bag} classification error by using cross-validation to determine  the optimal value of \textit{ntree} (which represents the number of trees to grow) hyperparameter \citep{james2013introduction}.
 
-\subsubsection{Random Forest}
+\subsubsection{Random Forest (RF)}
 
 As opposed to Bagging which considers all the predictors at each split in a tree, in Random Forest, $m$ random samples of $p$ predictors is chosen as a split candidate and only one of the $m$ predictors is used after which a fresh sample is taken for the next split. Ideally, the number of predictors at each split is approximately equal to the square root number of predictors, $m\approx\sqrt{p}$. We denote this by $mtry$ and use cross-validation to determine optimal value \citep{james2013introduction}. 
 
-\subsubsection{Boosting}
+\subsubsection{Boosting (BOOST)}
 
 
 As opposed to bagging, which involves growing $B$ trees independently, boosting involves growing the trees sequentially using the information from the previous tree. In particular, in Boosting the original dataset is slightly modified and a tree grown as opposed to Bagging which involves bootstrapping the training dataset. Boosting model has parameters: 1) \textit{shrinkage parameter}, $\lambda>0$, which controls the rate at which boosting algorithm learns; 2) the number $d$ $(interaction.depth)$ which controls the complexity of the boosted trees; and 3) $n.minobsinnode$ which controls the minimum number of observations at each terminal nodes \citep{james2013introduction}.
 
-
-\subsubsection{$k$-Nearest Neighbours (kNN)}
-
-Given $k>0$ and $x_0$ as a test label, kNN first identifies $k$ points in the neighbourhood of $x_0$, denoted as $\mathit{N}_0$. Based on the conditional probability of $x_0$ belonging to class $j$, 
-\[
-P(Y = j|X = x_0) = \frac{1}{k}\sum_{i\in \mathit{N}_0}I(y_i=j),
-\]
-$I(y_i=j)$ is indicator variable that equals 1 if $y_i=j$, 0 otherwise), KNN applies Bayes rule and classifies $x_0$ to the class with the largest probability \citep{trevor2009elements}. In this case, crossfold validation was used to determine optimal $k$.
-
-\subsubsection{Naive Bayes Classifier}
+\subsubsection{Naive Bayes Classifier (NB}
 
 Naive Bayes is a machine learning classification algorithm which classifies an object, with some given features, to a given class based on conditional probability. It assumes that the features are conditionally independent given the input values. This means that the probability of observing the set of features $x_1, x_2, \cdots, x_n$ is simply the product of individual probabilities.
 
@@ -202,6 +194,16 @@ and the Bayes Classifier is given by
 \begin{align}
 NB_{class} =  \underset{C_i\in C}{\mathrm{argmax }}\left[ P(C_i) \prod_j{P(x_j|C_i)}\right] \label{eqn1}
 \end{align}
+
+
+\subsubsection{$k$-Nearest Neighbours (kNN)}
+
+Given $k>0$ and $x_0$ as a test label, kNN first identifies $k$ points in the neighbourhood of $x_0$, denoted as $\mathit{N}_0$. Based on the conditional probability of $x_0$ belonging to class $j$, 
+\[
+P(Y = j|X = x_0) = \frac{1}{k}\sum_{i\in \mathit{N}_0}I(y_i=j),
+\]
+$I(y_i=j)$ is indicator variable that equals 1 if $y_i=j$, 0 otherwise), KNN applies Bayes rule and classifies $x_0$ to the class with the largest probability \citep{trevor2009elements}. In this case, crossfold validation was used to determine optimal $k$.
+
 
 \noindent The algorithm estimates $P(C_i)$ and $P(x_j|C_i)$ based on the observed frequencies in the training dataset. This implies that this algorithm doesn't require explicit search space since the learned hypothesis is simply formed by simply counting the frequency of various data combinations (in case of categorical feature) or by calculating some probability density based on some distributional assumption (e.g., Gaussian) for continuous feature. Given a new instance, the classifier predicts its class by assigning it to a class in which \autoref{eqn1} is maximum given a set of features \citep{mitchell1990machine}.
 
@@ -236,11 +238,32 @@ is the greatest \citep{james2013introduction}.
 \noindent A neural network model can be thought of as a model consisting of an \textit{activation function}, hidden units and layers and the output (layer). The activation function transforms input to output through the hidden units (neurons) and provides outputs which are a linear combination of the input variables.
 \noindent Given input vector $\mathbf{X}$ with $p$ components and a target $\mathbf{Y}$ with $K$ classes, the hidden units, $Z_1, \cdots Z_m$, which a linear combination of the input $\mathbf{X}$ is defined as $$Z_m = \sigma(\alpha_{0m} + \alpha_m'\mathbf{X}).$$ $Y_k$ is then modeled as a linear combination of $Z_m$, as follows: $$T_k = \beta_{0k} + \beta_k'\mathbf{Z} \quad \text{and} \quad f_k(X) = g_k(\mathbf{T}).$$ Where $\mathbf{Z} = (Z_1, Z_2 \cdots Z_m)'$ and $\mathbf{T} = (T_1, T_2, \cdots, T_k)'$; $\sigma()$ is the nonlinear activation (e.g., sigmoid $\sigma(v) = 1/(1-\exp(-v))$); $g_k(K)$ is the softmax output transformation function defined as $g_k(T) = \frac{\exp(T_k)}{\sum_{h=1}^k(\exp(T_k))}$ while $\alpha_{0m}$, $\alpha_m$, $\beta_{0k}$ and $\beta_k$ are the unknown weights to be estimated. The unknown weights are estimated using \textit{back-propagation} through \textit{gradient descent} \cite{trevor2009elements}. Training NN involves optimizing the \textit{weight decay}, $\lambda\geq0$, such that larger values of $\lambda$ tends to shrink the weights towards zero. This helps reduce \textit{overfitting} problems. The other \textit{hyperparameter} to optimize is the number of \textit{hidden units}, \textit{size}, in the hidden layer. Cross-validation was used to determine the optimal value of $\lambda$ and \textit{size}.
 
+\subsection{Variable (Relative) Importance}
+
+For a single decision tree, the variable relative importance for each predictor $X_l$ is given by
+\[
+R^2_{l}(T) = \sum^{J-1}_{k=1}\hat{i}^2_kI(v(k) = l)
+\]
+where $J-1$ are the internal nodes of the tree \cite{trevor2009elements}. In each node, $k$, an input predictor, $X_v(k)$, is chosen and used to partition the node into components, within which a constant is fit to the response. Improvement in squared error risk, $\hat{i}^2_k$, is computed and the chosen predictor is the one which improves $\hat{i}^2_k$. The squared relative importance of the predictor $X_l$ is the sum of $\hat{i}^2_k$ over all $k$ internal nodes. For additive tree (random forest, bagging and boosting), the relative importance measure is the average of all the tress
+\[
+R^2_{l} = \frac{1}{M}\sum^M_{m=1}R^2_{l}(T_m).
+\]
+For Neural Network, a method proposed by \citet{gevrey2003review} is used to compute the relative importance of the input predictors. It involves partitioning the hidden-output layer connection weights of each of the hidden neurons into components associated with each of the input neuron. The absolute input-hidden layer connection weights, $|W_{ih|}$, for hidden neuron, $h$, is divided by the sum of all the $|W_{ih}|$;
+\[
+Q_{ih} = \frac{|W_{ih}|}{\sum^{ni}_{i=1}|W_{ih}|}
+\]
+where $n$ is the number of hidden neurons in the hidden layer. The relative importance of all the input predictors is then defined as
+\[
+RI(\%) = \frac{\sum^{nh}_{h=1}Q_{ih}}{\sum^{nh}_{h=1}\sum^{ni}_{i=1}Q_{ih}}
+\]
+
+\noindent For the other models which do not have specific way of estimating variable importance, the method proposed by \citet{caretpackage} in \textit{caret package} is used. The method involves analysis of ROC curve for every predictor with different sensitivity-specificity cutoffs. Area under curve is computed using trapezoidal rule in each case and the resulting estimate is the variable importance measure. All variable importance measures are scaled to a maximum of 100.
+
 \subsection{Model training, evaluations, testing and comparisons}
 
-Dataset was randomly partitioned (stratified within the response variable) into $75\%$ training set and $25\%$ test set. A 10-fold Cross-Validation (CV) was used on the training set in order to obtain the optimal, \textit{best}, parameter values. A \textit{random search} parameter space with a \textit{tunelength = 10} was used for all the models which required hyperparameter specification as discussed above (please see more information in \textit{caret} help page). \\
+Dataset is randomly partitioned (stratified within the response variable) into $75\%$ training set and $25\%$ test set. A 10-fold Cross-Validation (CV) is used on the training set in order to obtain the optimal, \textit{best}, parameter values. A \textit{random search} parameter space with a \textit{tunelength = 10} is used for all the models which require hyperparameter specification as discussed above (please see more information in \textit{caret} help page). \\
 
-\noindent ROC (receiver operating characteristic curve) and AUC (area under the curve) were used as the performance metric for the algorithm within Cross-Validation resamples and also to compare between the models (on the test data). ROC gives a mechanism to evaluate the predictions at different classification thresholds. ROC represents a probability curve (True Positive Rate (TPR) against False Positive Rate (FPR)) at varying thresholds while AUC gives the overall performance of the classifier summarized over all possible thresholds. The higher the AUC, the better the model at correctly predicting 0s as 0s and 1s as 1s. Model \textit{accuracy} (sum of True Positive (TP) and True Negative (TN) divided by total sample) was also reported for comparison to existing studies \citep{james2013introduction}.
+\noindent ROC (receiver operating characteristic curve) and AUC (area under the curve) are used as the performance metric for the algorithm within Cross-Validation resamples and also to compare between the models (on the test data). ROC gives a mechanism to evaluate the predictions at various classification thresholds. ROC represents a probability curve (True Positive Rate (TPR) against False Positive Rate (FPR)) at varying thresholds while AUC gives the overall performance of the classifier summarized over all possible thresholds. The higher the AUC, the better the model at correctly predicting 0s as 0s and 1s as 1s. Model \textit{accuracy} (sum of True Positive (TP) and True Negative (TN) divided by total sample) was also reported for comparison to existing studies \citep{james2013introduction}.
 
 \clearpage
 
@@ -262,7 +285,7 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
 \end{table}
 \vspace*{-12pt}
 
-\noindent Figure \ref{fig:features} shows compares cell nuclei readings between the diagnosis status.  Most of the variables do not show clear separation of diagnosis status (for example \textit{semmetryse} and \textit{smoothnessse} the two classes are almost superimposed). However, there is a fairly good separation for \textit{concavepointsmean}, \textit{concavepointsworst}, \textit{concavityworst}, \textit{areamean} and \textit{perimetermean}.
+\noindent Figure \ref{fig:features} compares cell nuclei readings across the diagnosis status.  Most of the variables do not show clear separation of diagnosis status (for example, in \textit{semmetryse} and \textit{smoothnessse} the two classes are almost superimposed). However, there is a fairly good separation in \textit{concavepointsmean}, \textit{concavepointsworst}, \textit{concavityworst}, \textit{areamean} and \textit{perimetermean}.
 
 \noindent\begin{figure}[H]
     \centering
@@ -272,7 +295,7 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
 \end{figure}
 
 \clearpage
-\noindent \autoref{fig:cv_results} below summarizes and compares the 10-fold cross-validation result for some of the models. In particular, Random Forest \textit{best} model had $2$ predictors chosen at each split, \autoref{fig:rf_cv}; the optimal size of the neighbourhood, $k$, was $k = 23$ for $k-$Nearest Neighbours model, \autoref{fig:knn_cv}; Boosting \textit{best} model had $500$ trees fitted with a maximum interaction depth of $2$ and a learning rate of $0.1$, \autoref{fig:boost_cv}; and the \textit{best} Neural Network model had $9$ hidden neurons with a weight decay rate of $0.0075$, \autoref{fig:nn_cv}.
+\noindent \autoref{fig:cv_results} below summarizes and compares the 10-fold cross-validation result for some of the models. In particular, Random Forest \textit{best} model had $11$ predictors chosen at each split, \autoref{fig:rf_cv}; the optimal size of the neighbourhood, was $k = 15$ for $k-$Nearest Neighbours model, \autoref{fig:knn_cv}; Boosting \textit{best} model had $250$ trees fitted with a maximum interaction depth of $1$ and a learning rate of $0.1$, \autoref{fig:boost_cv}; and the \textit{best} Neural Network model had $13$ hidden neurons with a weight decay rate of $0.00056$, \autoref{fig:nn_cv}.
 \noindent\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
@@ -291,15 +314,28 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
         \includegraphics[width=\textwidth]{NN_Plots.Rout.pdf}
         \caption{\small{Neural Network}}\label{fig:nn_cv}
     \end{subfigure}
-    \caption{{A summary for hyperparameter optimal values for some of the models. The results are based on a $10$-fold Cross-Validation. The \textit{best} tune parameter values were used in the final model used in the test dataset.}}\label{fig:cv_results}
+    \caption{{A summary for hyperparameter optimal values for some of the models. The results are based on a $10$-fold Cross-Validation. The \textit{best} tune parameter values were used in the final model fitted to the test dataset.}}\label{fig:cv_results}
 \end{figure}
-
+%predicted_class.Rout
 \clearpage
-\noindent \autoref{fig:auc_resamples} compares the ROC-AUC scores of each of the models for the $10$ cross-validation resamples. Boosting model had the highest median value of AUC followed by Neural Network model while Classification Tree was the worst performing.
+\noindent \autoref{fig:auc_resamples} compares the ROC-AUC scores of each of the models for the $10$ cross-validation resamples. Boosting model had slightly higher median value of AUC followed by Random Forest model while Classification Tree was the worst performing.
 \noindent\begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{auc_Plots.Rout.pdf}\vspace{-0.3cm}
+    \includegraphics[width=0.3\textwidth]{auc_Plots.Rout.pdf}\vspace{-0.3cm}
     \caption{\small{Boxplots of the AUC for each of the 10 folds (resamples) of all the fitted models.}}\label{fig:auc_resamples}
+\end{figure}
+\noindent To summarize the models performance on the test dataset, probabilities of correctly predicting the observed diagnosis class of the test data were computed and are presented in \autoref{fig:predictions_prob}. In case of perfect prediction (classification), we would expect a distinct separation of the densities among the two classes.
+\noindent\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{predicted_prob.Rout.pdf}\vspace{-0.3cm}
+    \caption{\small{Density plots showing the probabilities of predicitng the observed class.}}\label{fig:predictions_prob}
+\end{figure}
+
+\noindent To evaluate how the models were over or under predicting the diagnosis classes, total number of predictions of each diagnosis class were compared against the observed count of Malignant cases in the test data. However, this does not necessarily reflect the number of correct predictions of each diagnosis class. As shown in \autoref{fig:predictions_class}, LDA, CT and KNN models tend to under predict Malignant cases. On the other hand, NB model tend to over predict.
+\noindent\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{predicted_class.Rout.pdf}\vspace{-0.3cm}
+    \caption{\small{A comparison of the number of correct diagnosis class predictions against the observed number of malignant (dotted line) }}\label{fig:predictions_class}
 \end{figure}
 
 \noindent \autoref{Tab:metric_summary} below summarizes the performance metric measures on the test dataset. For each model, \textit{accuracy, sensitivity, specificity and AUC} were recorded and then compared to determine the best performer per metric.
@@ -323,27 +359,42 @@ The dataset contains $569$ cases and $32$ variables, of which, 31 describes char
 \end{tabular}
 }
 \end{table}
-\vspace*{-12pt}
 
 \clearpage
-\noindent \autoref{fig:roc} compares ROC curves (on the test dataset) for fitted models. The \textit{true positive rate} is the proportion of \textit{Malignant} that are correctly classified (sensitivity) while the \textit{false positive rate} (1-specificity) is the proportion of \textit{benign} that are incorrectly as \textit{malignant}, for a given threshold.
+\noindent \autoref{fig:var_import} shows the variable importance plots for the final models. Although the first three most important variables (\textit{perimeterworst, radiusworst and areaworst}) are consistent in most of the models (except classification tree), the importance in non-tree (except RF) based methods ($k$-NN, LDA, NN, QDA and RF) are more uniform over the predictors.
+\noindent\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{var_importance.Rout.pdf}\vspace{-0.3cm}
+    \caption{\small{Variable importance plots for the top 10 variables. The variable importance are scaled to 100 and expressed relative to the maximum.}}\label{fig:var_import}
+\end{figure}
+
+\clearpage
+\noindent \autoref{fig:roc} compares ROC curves (on the test dataset) for fitted models. The \textit{true positive rate} is the proportion of \textit{Malignant} that are correctly classified (sensitivity) while the \textit{false positive rate} (1-specificity) is the proportion of \textit{benign} that are incorrectly classified as \textit{malignant}, for a given threshold. \autoref{fig:auc_ci} compares the bootstrapped ($2000$ replicates) $95\%$ confidence intervals of model AUC on the test data.
 
 \noindent\begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.4\textwidth}
         \includegraphics[width=\textwidth]{roc_Plots.Rout.pdf}
-        \caption{\small{Neural Network}}\label{fig:roc}
+        \caption{\small{ROC curves}}\label{fig:roc}
     \end{subfigure}
     \begin{subfigure}[b]{0.4\textwidth}
         \includegraphics[width=\textwidth]{auc_ci.Rout.pdf}
-        \caption{\small{Neural Network}}\label{fig:roc_ci}
+        \caption{\small{AUC bootstrapped CI}}\label{fig:auc_ci}
     \end{subfigure}    
-    \caption{\small{Distribution of features by diagnosis. The straight dotted lines are the mean values per diagnosis.}}\label{fig:roc_ci}
+    \caption{\small{The ideal ROC curve, \autoref{fig:roc}, hugs the top left corner, indicating a high true positive rate(TPR) and low false positive rate(FPR). Random forest and Neural Nettwork models, comparatively, have the highest TPR and and lowest FPR, \autoref{fig:roc}. This is supported by, comparatively, narrow AUC confidence intervals for these two models, \autoref{fig:auc_ci}.}}\label{fig:roc_ci}
     %\caption{Distribution of variables by diagnosis}\label{Fig:Var_Desc1}\vspace{-0.3cm}
 \end{figure}
+
+\section{Discussion and Conclusion}
+
+Boosting, Neural Network and Random Forest models provide relatively distinct probabilities of observing either of the diagnosis classes. This explains, comparatively, high sensitivity and accuracy scores for these models. Specifically, Random Forest model had the highest scores ($100\%$) in all the performance measures used. This result makes the highest accuracy value ($100\%$) in classifying Wisconsin (Diagnostic) Breast Cancer (WDBC) Dataset in comparison to the previous studies highlighted in this study.\\
+
+\noindent Various machine learning algorithms have been used to analyse medical data. However, one of the key challenges is building an accurate classifier. In this task, we applied $9$ algorithms: Neural Networks, Classification trees, Bagging, Boosting, Random Forest, $k-$Nearest Neighbours, Naive Bayes, Linear and Quadratic Discriminant Analysis on WDBC dataset and compared their performance based on AUC, accuracy, specificity and sensitivity, of which Random Forest attained the highest scores thus proving to be the best algorithm in classifying Breast Cancer diagnosis. In addition, at least $6$ of the fitted algorithms consistently identified \textit{worst nuclei perimeter} and \textit{worst nuclei radius} as the most important variables in predicting Breast Cancer diagnosis.\\
+
+\noindent Future work may involve using model-based clusturing algorithms and model ensemble methods as a basis of comparison to Random Forest result.
 
 \newpage
 %\bibliographystyle{unsrt}
 \bibliographystyle{plainnat}
-\bibliography{Presentation12}
+\bibliography{Steve_FinalProject}
 \end{document}

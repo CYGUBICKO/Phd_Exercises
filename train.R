@@ -3,7 +3,7 @@ library(caret)
 model_train_fit <- function(train_methods){
 	fit_result <- list()
 	for (m in 1:length(train_methods)){
-	set.seed(237)
+	set.seed(257)
 		fit_name <- paste(names(train_methods)[[m]], "_", "fit", sep = "")
 		tryCatch(
 			if (train_methods[[m]]=="nnet"){
@@ -19,7 +19,7 @@ model_train_fit <- function(train_methods){
 				)
 			} 
 			else{
-				set.seed(237)
+				set.seed(257)
 				fit_result[[fit_name]] <- train(
 					diagnosis ~ .
 						, data = train_df

@@ -13,7 +13,7 @@ tune_lst <- list()
 figures <- list()
 roc_density <- list()
 for (i in 1:length(fitted_models)){
-	set.seed(237)
+	set.seed(257)
 	b_tune <- fitted_models[[i]]$bestTune
 	rownames(b_tune) <- NULL
 	best_tune[[names(fitted_models)[i]]] <- b_tune

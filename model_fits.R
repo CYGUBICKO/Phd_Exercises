@@ -1,6 +1,10 @@
 library(caret)
-set.seed(237)
-
+library(doParallel) # parallel processing
+registerDoParallel()
+require(foreach)
+require(iterators)
+require(parallel)
+set.seed(257)
 # List the models to fit
 models <- c(LDA = "lda"
 	, QDA = "qda"

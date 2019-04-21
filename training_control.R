@@ -1,5 +1,5 @@
 library(caret)
-set.seed(237)
+set.seed(257)
 
 # We use the trainControl function from caret package to control how the parameters in the training set are genretated : see ?trainControl
 

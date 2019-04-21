@@ -1,11 +1,12 @@
 library(dplyr)
 library(pROC)
 library(tibble)
+
 library(ggplot2)
 theme_set(theme_bw() + 
 	theme(panel.spacing=grid::unit(0,"lines")))
 
-set.seed(237)
+set.seed(257)
 
 ## This script computes the CI for AUC using
 
@@ -26,7 +27,7 @@ aucCi <- function(df){
 		, df[, "probs"]
       , levels = c("M", "B")
 	)
-  auc_ci <- ci(roc_obj)
+  auc_ci <- ci(roc_obj,  method = "bootstrap", stratified = FALSE, reuse.auc = TRUE)
   as.vector(auc_ci)
 }
 
@@ -38,7 +39,7 @@ pred_ci <- (pred_ci
 	%>% as.data.frame()
 	%>% rownames_to_column()
 )
-
+data.frame(pred_ci)
 print(
   ggplot(pred_ci, aes(x = reorder(rowname, -AUC), y = AUC))
   + geom_point(size = 4)
