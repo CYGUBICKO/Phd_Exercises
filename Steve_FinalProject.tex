@@ -60,6 +60,7 @@
 \addtolength{\topmargin}{-.875in}
 \addtolength{\textheight}{1.75in}
 
+\newcommand{\jd}{\textsl{[[JD: ]]}}
 
 \begin{document}
 
@@ -138,9 +139,12 @@ Prof. Ben \textsc{Bolker}
 \section{Introduction}
 
 \noindent
+\jd{``best-suited'' seems like fuzzy language.}
 Machine learning (ML) techniques allows computers to `learn' and discern patterns from large, noisy or complex datasets. This capability makes ML approaches best-suited to cancer prognosis and prediction. Application of various ML methods in development of cancer predictive models have resulted into improved understanding of cancer patients and better decision making. Clinical management of cancer patients can be improved by early diagnosis and prognosis, resulting to improvements in cancer research. One of the problems which has led to emergence of applications of ML methods in cancer research is the need to classify cancer patients into low and high risk groups \citep{kourou2015machine}.\\
 
+
 \noindent Breast cancer is one of the leading causes of death among women. In the US, at least $1$ in $8$ women are at risk of developing invasive breast cancer over the cause of their lifetime. It is expected that $268,600$ cases of cancer will be diagnosed among US women by the end of $2019$, of which $62,930$ are expected to be breast cancer and about $41,760$ cases may result to death \citep{uscancer2019}. However, there has been an overall decline in cancer incidence and cancer related deaths since $2000$. This can be attributed to advancement in cancer research especially: early screening and diagnosis, improved treatment methods and awareness campaigns \citep{asri2016using}. Breast cancer occurs when there is an abnormal growth of cells in the breast tissue. This may result into \textit{tumor growth}, which can either be \textit{cancerous} or \textit{non-cancerous}. \textit{Malignant} tumors are cancerous and attack other cells by growing into or spreading to the nearby tissues. On the other hand, \textit{benign} tumors are non-cancerous which are nolonger capable of growing or behaving normally. Other types of breast cancer are \textit{in situ}: \textit{ductal carcinoma} and \textit{lobular carcinoma}.\\
+\jd{Keep things simple (and accurate). It sounds like you are saying that cancer can be non-cancerous. And don't just list things.}
 
 \noindent Many ML algorithms have been used to classify breast cancer, specifically Wisconsin (Diagnostic) Breast Cancer (WDBC) Dataset. \citet{chaurasia2017data} applied and compared Naive Bayes, SVM-RBF kernel, Neural Network, Decision Tree and CART algorithms on WDBC orginal dataset to evaluate the best performer. The best model, SVM-RBF kernel, had the highest accuracy of $96.84\%$. \citet{djebbari2008ensemble} used ensemble ML techniques to predict the survival time in breast cancer. Their methods showed improved performance as compared to earlier methods \citep{asri2016using}. \citet{aruna2011knowledge} compared the performance of C4.5, Naive Bayes, SVM and KNN on WDBC. Their best model had an accuracy of $96.99\%$. On the other hand, \citet{asri2016using} compared the same models and achieved an accuracy of $97.13\%$ with SVM as the best model \citep{asri2016using}.\\
 

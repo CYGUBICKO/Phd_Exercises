@@ -28,6 +28,8 @@ $(ms):
 
 ######################################################################
 
+Steve_FinalProject.pdf: Steve_FinalProject.tex
+
 ## We will delete pipe soon
 
 subdirs += testtex Presentation
