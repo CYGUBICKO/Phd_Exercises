@@ -28,8 +28,6 @@ $(ms):
 
 ######################################################################
 
-Steve_FinalProject.pdf: Steve_FinalProject.tex
-
 ## We will delete pipe soon
 
 subdirs += testtex Presentation
@@ -93,6 +91,8 @@ model_predictions.Rout: pruning_plots.Rout model_predictions.R
 auc_ci.Rout: model_predictions.Rout auc_ci.R
 
 ## Final project writeup
+## JD: Try not to be linear like this; just pass what you need to pass
+## Easier for people to figure out what you've done
 var_importance.Rout: auc_ci.Rout var_importance.R
 predicted_prob.Rout: var_importance.Rout predicted_prob.R
 predicted_class.Rout: predicted_prob.Rout predicted_class.R
@@ -138,7 +138,6 @@ polyr.Rout: model_predictions.Rout polyr.R
 
 clean: 
 	rm *Rout.*  *.Rout .*.RData .*.Rout.* .*.wrapR.* .*.Rlog *.RData *.wrapR.* *.Rlog *.Rlog *.rdeps *.rda .*.rdeps .*.rda *.vrb *.toc *.out *.nav *.snm *.log *.aux *.bbl *.blg *.dvi *.ps *.gz
-
 
 ######################################################################
 
